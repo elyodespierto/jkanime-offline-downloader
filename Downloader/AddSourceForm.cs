@@ -28,7 +28,7 @@ namespace Downloader
             {
                 AddSlash.Checked = _currentObject.AddSlash;
                 EpisodeFormat.Text = _currentObject.Format;
-                URL.Text = _currentObject.Mp4Url;
+                Mp4Url.Text = _currentObject.Mp4Url;
                 SeasonTextBox.Text = (_currentObject.Season).ToString();
                 NameTextBox.Text = _currentObject.Name;
                 IsLongSeason.Checked = _currentObject.IsLongSeason;
@@ -86,7 +86,7 @@ namespace Downloader
         private void FillSource(UrlSource source)
         {
             source.Format = EpisodeFormat.Text;
-            source.Mp4Url = URL.Text;
+            source.Mp4Url = Mp4Url.Text;
             source.Name = NameTextBox.Text;
             source.IsLongSeason = IsLongSeason.Checked;
             source.AddSlash = AddSlash.Checked;
@@ -102,9 +102,11 @@ namespace Downloader
             if (IncludeSiteUrl.Checked)
             {
                 source.SiteUrl = SiteUrl.Text;
+                source.Mp4Url = null;
             }
             else
             {
+                source.Mp4Url = Mp4Url.Text;
                 source.SiteUrl = null;
             }
         }
@@ -133,22 +135,44 @@ namespace Downloader
 
         private void URL_TextChanged(object sender, EventArgs e)
         {
-            FinalURL.Text = Helper.CreateURL(AddSlash.Checked, URL.Text, EpisodeFormat.Text);
+            FinalURL.Text = Helper.CreateURL(AddSlash.Checked, Mp4Url.Text, EpisodeFormat.Text);
         }
 
         private void EpisodeFormat_TextChanged(object sender, EventArgs e)
         {
-            FinalURL.Text = Helper.CreateURL(AddSlash.Checked, URL.Text, EpisodeFormat.Text);
+            FinalURL.Text = Helper.CreateURL(AddSlash.Checked, Mp4Url.Text, EpisodeFormat.Text);
         }
 
         private void AddSlash_CheckedChanged(object sender, EventArgs e)
         {
-            FinalURL.Text = Helper.CreateURL(AddSlash.Checked, URL.Text, EpisodeFormat.Text);
+            FinalURL.Text = Helper.CreateURL(AddSlash.Checked, Mp4Url.Text, EpisodeFormat.Text);
         }
 
         private void IncludeSiteUrl_CheckedChanged(object sender, EventArgs e)
         {
             SiteUrl.Enabled = IncludeSiteUrl.Checked;
+            Mp4Url.Visible = !SiteUrl.Enabled;
+            Shadow.Visible = SiteUrl.Enabled;
+            AddSlash.Enabled = !SiteUrl.Enabled;
+
+            if (SiteUrl.Enabled)
+            {
+                FinalURL.Text = Helper.Combine(SiteUrl.Text, EpisodeFormat.Text);
+            }
+            else
+            {
+                FinalURL.Text = Helper.CreateURL(AddSlash.Checked, Mp4Url.Text, EpisodeFormat.Text);
+            }
+        }
+
+        private void Shadow_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SiteUrl_TextChanged(object sender, EventArgs e)
+        {
+            FinalURL.Text = Helper.Combine(SiteUrl.Text, EpisodeFormat.Text);
         }
     }
 }

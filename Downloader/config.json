@@ -3,6 +3,7 @@
     {
       "AddSlash": true,
       "IsLongSeason": false,
+      "SiteUrl": null,
       "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia",
       "Format": "00",
       "Name": "boku-no-hero",
@@ -13,6 +14,7 @@
     {
       "AddSlash": true,
       "IsLongSeason": false,
+      "SiteUrl": null,
       "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia-2nd-season",
       "Format": "00",
       "Name": "boku-no-hero",
@@ -23,6 +25,7 @@
     {
       "AddSlash": true,
       "IsLongSeason": false,
+      "SiteUrl": null,
       "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia-3rd-season",
       "Format": "00",
       "Name": "boku-no-hero",
@@ -33,6 +36,7 @@
     {
       "AddSlash": false,
       "IsLongSeason": false,
+      "SiteUrl": null,
       "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/miheroooac-",
       "Format": "00",
       "Name": "boku-no-hero",
@@ -43,6 +47,7 @@
     {
       "AddSlash": true,
       "IsLongSeason": true,
+      "SiteUrl": null,
       "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/hunter-x-hunter-2011",
       "Format": "00",
       "Name": "hunter-x-hunter",
@@ -53,6 +58,7 @@
     {
       "AddSlash": true,
       "IsLongSeason": false,
+      "SiteUrl": null,
       "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/onepucman",
       "Format": "00",
       "Name": "one-punch-man",
@@ -63,6 +69,7 @@
     {
       "AddSlash": true,
       "IsLongSeason": true,
+      "SiteUrl": null,
       "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/fai1",
       "Format": "00",
       "Name": "fairy-tail",
@@ -73,6 +80,7 @@
     {
       "AddSlash": true,
       "IsLongSeason": false,
+      "SiteUrl": null,
       "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/fullmetalbrotherbord",
       "Format": "00",
       "Name": "fullmetal-brotherhood",
@@ -83,6 +91,7 @@
     {
       "AddSlash": true,
       "IsLongSeason": true,
+      "SiteUrl": null,
       "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/blacoverss",
       "Format": "00",
       "Name": "black-clover",
@@ -93,7 +102,8 @@
     {
       "AddSlash": false,
       "IsLongSeason": true,
-      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/slayerrrr-",
+      "SiteUrl": "https://jkanime.net/kimetsu-no-yaiba/",
+      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com",
       "Format": "00",
       "Name": "kimetsu-no-yaiba",
       "Season": 1,

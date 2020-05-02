@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.URL = new System.Windows.Forms.TextBox();
+            this.Mp4UrlLabel = new System.Windows.Forms.Label();
+            this.Mp4Url = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.EpisodeFormat = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -46,24 +46,25 @@
             this.labesldsjfklsj = new System.Windows.Forms.Label();
             this.SiteUrl = new System.Windows.Forms.TextBox();
             this.IncludeSiteUrl = new System.Windows.Forms.CheckBox();
+            this.Shadow = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
-            // label1
+            // Mp4UrlLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(29, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "URL";
+            this.Mp4UrlLabel.AutoSize = true;
+            this.Mp4UrlLabel.Location = new System.Drawing.Point(13, 13);
+            this.Mp4UrlLabel.Name = "Mp4UrlLabel";
+            this.Mp4UrlLabel.Size = new System.Drawing.Size(44, 13);
+            this.Mp4UrlLabel.TabIndex = 0;
+            this.Mp4UrlLabel.Text = "Mp4 Url";
             // 
-            // URL
+            // Mp4Url
             // 
-            this.URL.Location = new System.Drawing.Point(48, 10);
-            this.URL.Name = "URL";
-            this.URL.Size = new System.Drawing.Size(566, 20);
-            this.URL.TabIndex = 1;
-            this.URL.TextChanged += new System.EventHandler(this.URL_TextChanged);
+            this.Mp4Url.Location = new System.Drawing.Point(64, 10);
+            this.Mp4Url.Name = "Mp4Url";
+            this.Mp4Url.Size = new System.Drawing.Size(550, 20);
+            this.Mp4Url.TabIndex = 1;
+            this.Mp4Url.TextChanged += new System.EventHandler(this.URL_TextChanged);
             // 
             // label2
             // 
@@ -205,6 +206,7 @@
             this.SiteUrl.Name = "SiteUrl";
             this.SiteUrl.Size = new System.Drawing.Size(523, 20);
             this.SiteUrl.TabIndex = 14;
+            this.SiteUrl.TextChanged += new System.EventHandler(this.SiteUrl_TextChanged);
             // 
             // IncludeSiteUrl
             // 
@@ -215,6 +217,16 @@
             this.IncludeSiteUrl.TabIndex = 15;
             this.IncludeSiteUrl.UseVisualStyleBackColor = true;
             this.IncludeSiteUrl.CheckedChanged += new System.EventHandler(this.IncludeSiteUrl_CheckedChanged);
+            // 
+            // Shadow
+            // 
+            this.Shadow.Enabled = false;
+            this.Shadow.Location = new System.Drawing.Point(64, 10);
+            this.Shadow.Name = "Shadow";
+            this.Shadow.Size = new System.Drawing.Size(550, 20);
+            this.Shadow.TabIndex = 16;
+            this.Shadow.Visible = false;
+            this.Shadow.TextChanged += new System.EventHandler(this.Shadow_TextChanged);
             // 
             // AddSourceForm
             // 
@@ -235,10 +247,11 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.EpisodeFormat);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.URL);
+            this.Controls.Add(this.Mp4Url);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.labesldsjfklsj);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.Mp4UrlLabel);
+            this.Controls.Add(this.Shadow);
             this.MaximizeBox = false;
             this.Name = "AddSourceForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
@@ -251,8 +264,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox URL;
+        private System.Windows.Forms.Label Mp4UrlLabel;
+        private System.Windows.Forms.TextBox Mp4Url;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox EpisodeFormat;
         private System.Windows.Forms.Label label3;
@@ -269,5 +282,6 @@
         private System.Windows.Forms.Label labesldsjfklsj;
         private System.Windows.Forms.TextBox SiteUrl;
         private System.Windows.Forms.CheckBox IncludeSiteUrl;
+        private System.Windows.Forms.TextBox Shadow;
     }
 }

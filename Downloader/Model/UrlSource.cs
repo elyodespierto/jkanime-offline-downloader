@@ -21,6 +21,7 @@
         public int? Season { get; set; }
         public string Folder => Name;
         public virtual string Text => Season.HasValue ? $"{Name}   |    temporada-{Season}" : $"{Name}";
+        public string Url => string.IsNullOrEmpty(SiteUrl) ? Mp4Url : SiteUrl;
         public override string ToString()
         {
             return Text;
