@@ -9,21 +9,25 @@ using System.Windows.Forms;
 using Downloader.Extensions;
 using Downloader.Repository;
 using Downloader.Utils;
+using Gecko;
+using TradeAutomation;
 
 namespace Downloader
 {
     public partial class MainForm : Form
     {
         private string _selectedFolder;
-        private URLObject _currentSource;
+        private UrlSource _currentSource;
         private WebClient _currentClient;
         private ConfigRepository _configRepository;
+        private LogRepository _log;
 
         public MainForm()
         {
             InitializeComponent();
 
             _configRepository = new ConfigRepository();
+            _log = new LogRepository();
         }
 
         private void SaveDefaultFolder()
@@ -40,7 +44,14 @@ namespace Downloader
 
         private async void ButtonDownload_Click(object sender, EventArgs e)
         {
-            await DownloadNext();
+            if (_currentSource != null)
+            {
+                await DownloadNext(_currentSource);
+            }
+            else
+            {
+                Status.Append("No se ha seleccionado una configuración");
+            }
         }
 
         private async void DownloadAll_Click(object sender, EventArgs e)
@@ -50,15 +61,13 @@ namespace Downloader
 
             foreach (var source in config.Sources)
             {
-                _currentSource = source;
+                UpdateUI(source);
 
-                UpdateUI();
-
-                await DownloadNext();
+                await DownloadNext(source);
             }
         }
 
-        private async Task DownloadNext()
+        private async Task DownloadNext(UrlSource source)
         {
             try
             {
@@ -99,17 +108,18 @@ namespace Downloader
                 {
                 }
 
-                await DownloadNext(fromIndex, toIndex, amount);
+                await DownloadNext(source, fromIndex, toIndex, amount);
 
                 SaveDefaultFolder();
             }
             catch (Exception ex)
             {
-                Status.AddLine($"Error {ex}");
+                _log.Append(ex);
+                Status.Append("-> Fatal: error no handleado en DownloadNext(source). Ver log.");
             }
         }
 
-        private async Task DownloadNext(int fromIndex, int toIndex, int amount)
+        private async Task DownloadNext(UrlSource source, int fromIndex, int toIndex, int amount)
         {
             try
             {
@@ -117,102 +127,157 @@ namespace Downloader
                 {
                     if (fromIndex > toIndex || amount < 1)
                     {
-                        Status.AddLine($"Proceso Finalizado");
+                        _log.Append($"Proceso [{source.Text}] finalizado.");
+                        Status.Append($"-> Proceso [{source.Text}] finalizado.");
                     }
                     else
                     {
-                        _currentClient = client;
-
-                        var episodeNumber = fromIndex.ToString(_currentSource.Format);
-
-                        var season = string.Empty;
-
-                        if (_currentSource.Season.HasValue)
+                        if (!string.IsNullOrEmpty(source.SiteUrl))
                         {
-                            season = $"S{_currentSource.Season.Value.ToString("00")}";
-                        }
+                            using (var siteClient = new WebClient())
+                            {
+                                siteClient.Headers.Add("User-Agent", "C# console program");
 
-                        var episodeFormat = _currentSource.IsLongSeason ? "000" : _currentSource.Format;
+                                var site = siteClient.DownloadString("https://jkanime.net/kimetsu-no-yaiba/1/");
 
-                        var mediaName = $"{_currentSource.Name}_{season}E{fromIndex.ToString(episodeFormat)}.mp4";
+                                var mp4Start = site.IndexOf(source.Mp4Url);
+                            }
 
-                        string destination = GetFinalDestination(FinalDestination);
+                            var browser = new WebBrowser();
 
-                        Directory.CreateDirectory(destination);
+                            //browser.
+                            browser.ScriptErrorsSuppressed = true;
+                            browser.Navigate("https://jkanime.net/kimetsu-no-yaiba/1/");
 
-                        var fileDestination = Path.Combine(destination, mediaName);
+                            browser.DocumentCompleted += (s, e) =>
+                            {
+                                var htmlDocument = browser.Document.Window.Frames
+                                    .Cast<HtmlWindow>()
+                                    .Select(x => x.GetDocument())
+                                    .FirstOrDefault(x => x.Url.ToString().Contains("jkanime"));
 
-                        if (File.Exists(fileDestination))
-                        {
-                            await DownloadNext(fromIndex + 1, toIndex, amount);
+                                if (htmlDocument != null)
+                                {
+                                    browser.Dispose();
+
+
+
+                                    Xpcom.Initialize("Firefox");
+                                    var final = new GeckoWebBrowser();
+                                    final.Navigate(htmlDocument.Url.ToString());
+
+
+                                    //var final = new WebBrowser();
+
+                                    //final.Navigate(htmlDocument.Url);
+                                    //final.ScriptErrorsSuppressed = true;
+
+                                    //TODO those js are loading de .mp4
+                                    //Need to find a way to run scripts nice so i can get de video
+
+                                    final.DocumentCompleted += (s2, e2) =>
+                                    {
+                                        //for now this always gives false
+                                        var url = final.Text.Contains(".mp4");
+                                    };
+                                }
+                            };
                         }
                         else
                         {
-                            Status.AddLine($"Descargando {mediaName}");
+                            _currentClient = client;
 
-                            var finalUrl = Helper.CreateURL(_currentSource.AddSlash, URL.Text, episodeNumber);
-                            var tasks = new ConcurrentBag<Task>();
+                            var episodeNumber = fromIndex.ToString(source.Format);
 
-                            client.DownloadFileCompleted += (s, e) =>
+                            var season = string.Empty;
+
+                            if (source.Season.HasValue)
                             {
-                                if (e.Cancelled)
-                                {
-                                    Status.AddLine(Environment.NewLine);
-                                    Status.AddLine($"Ultima descarga cancelada");
+                                season = $"S{source.Season.Value.ToString("00")}";
+                            }
 
-                                    if (File.Exists(fileDestination))
-                                    {
-                                        File.Delete(fileDestination);
-                                    }
-                                }
-                                else if (e.Error != null)
-                                {
-                                    Status.AddLine(Environment.NewLine);
-                                    Status.AddLine($"Error al descargar {mediaName}. " +
-                                        $"{Environment.NewLine}" +
-                                        $"Error: {e.Error.Message}" +
-                                        $"{Environment.NewLine}" +
-                                        $"URLError: {finalUrl}");
+                            var episodeFormat = source.IsLongSeason ? "000" : source.Format;
 
-                                    if (File.Exists(fileDestination))
-                                    {
-                                        File.Delete(fileDestination);
-                                    }
-                                }
-                                else
-                                {
-                                    tasks.Add(DownloadNext(fromIndex + 1, toIndex, amount - 1));
-                                }
-                            };
+                            var mediaName = $"{source.Name}_{season}E{fromIndex.ToString(episodeFormat)}.mp4";
 
-                            await client.DownloadFileTaskAsync(finalUrl, fileDestination).ContinueWith(async task =>
+                            string destination = GetFinalDestination(FinalDestination, source);
+
+                            Directory.CreateDirectory(destination);
+
+                            var fileDestination = Path.Combine(destination, mediaName);
+
+                            if (File.Exists(fileDestination))
                             {
-                                Thread.Sleep(1000);
+                                await DownloadNext(source, fromIndex + 1, toIndex, amount);
+                            }
+                            else
+                            {
+                                Status.Append($"Descargando {mediaName}");
 
-                                Task.WaitAll(tasks.ToArray());
-                            });
+                                var finalUrl = Helper.CreateURL(source.AddSlash, source.Mp4Url, episodeNumber);
+                                var tasks = new ConcurrentBag<Task>();
+
+                                client.DownloadFileCompleted += (s, e) =>
+                                {
+                                    if (e.Cancelled)
+                                    {
+                                        _log.Append($"Ultima descarga cancelada");
+                                        Status.Append($"-> Ultima descarga cancelada: {mediaName}");
+
+                                        if (File.Exists(fileDestination))
+                                        {
+                                            File.Delete(fileDestination);
+                                        }
+                                    }
+                                    else if (e.Error != null)
+                                    {
+                                        _log.Append($"Error al descargar {mediaName}. " +
+                                            $"{Environment.NewLine}" +
+                                            $"Error: {e.Error.Message}" +
+                                            $"{Environment.NewLine}" +
+                                            $"URLError: {finalUrl}");
+                                        Status.Append($"-> Error al descargar {mediaName}");
+
+                                        if (File.Exists(fileDestination))
+                                        {
+                                            File.Delete(fileDestination);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        tasks.Add(DownloadNext(source, fromIndex + 1, toIndex, amount - 1));
+                                    }
+                                };
+
+                                await client.DownloadFileTaskAsync(finalUrl, fileDestination).ContinueWith(task =>
+                                {
+                                    Thread.Sleep(100);
+
+                                    Task.WaitAll(tasks.ToArray());
+                                });
+                            }
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Status.AddLine(Environment.NewLine);
-                Status.AddLine($"Error {ex}");
+                _log.Append(ex);
+                Status.Append("-> Fatal: error no handleado en DownloadNext(source, int, int, int). Ver log.");
             }
         }
 
-        private string GetFinalDestination(Label updatingLabel)
+        private string GetFinalDestination(Label updatingLabel, UrlSource source)
         {
             var destination = _selectedFolder;
 
-            if (_currentSource != null)
+            if (source != null)
             {
-                destination = _currentSource.Folder;
+                destination = source.Folder;
 
                 if (!string.IsNullOrEmpty(destination))
                 {
-                    destination = Path.Combine(_selectedFolder, _currentSource.Folder);
+                    destination = Path.Combine(_selectedFolder, source.Folder);
                 }
             }
 
@@ -231,7 +296,7 @@ namespace Downloader
                 {
                     _selectedFolder = fbd.SelectedPath;
                     SelectedFolder.Text = _selectedFolder;
-                    GetFinalDestination(FinalDestination);
+                    GetFinalDestination(FinalDestination, _currentSource);
                     SetAsDefault.Checked = false;
                 }
             }
@@ -243,20 +308,20 @@ namespace Downloader
 
         private void FolderNameTextBox_TextChanged(object sender, EventArgs e)
         {
-            GetFinalDestination(FinalDestination);
+            GetFinalDestination(FinalDestination, _currentSource);
         }
 
         private void URLSelectionComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _currentSource = URLCombo.SelectedItem as URLObject;
+            _currentSource = URLCombo.SelectedItem as UrlSource;
 
-            UpdateUI();
+            UpdateUI(_currentSource);
         }
 
-        private void UpdateUI()
+        private void UpdateUI(UrlSource source)
         {
-            URL.Text = _currentSource.Value;
-            FolderName.Text = _currentSource.Folder;
+            URL.Text = source.Mp4Url;
+            FolderName.Text = source.Folder;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -276,7 +341,7 @@ namespace Downloader
         private void LoadCombos()
         {
             URLCombo.Items.Clear();
-            URLCombo.Items.Insert(0, new EmptiURLObject());
+            URLCombo.Items.Insert(0, new EmptyUrlSource());
 
             var index = 1;
 
@@ -312,7 +377,8 @@ namespace Downloader
                 {
                     _currentClient.CancelAsync();
 
-                    Status.AddLine($"Cancelando descarga. Aguarde...");
+                    _log.Append($"Cancelando descarga. Aguarde...");
+                    Status.Append($"-> Cancelando descarga. Aguarde...");
                 }
             }
         }

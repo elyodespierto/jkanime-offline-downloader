@@ -10,13 +10,13 @@ namespace Downloader
 
     public partial class AddSourceForm : Form
     {
-        private URLObject _currentObject;
+        private UrlSource _currentObject;
         private string _oldURL;
         private ConfigRepository _configRepo;
 
         public event ItemSavedEventHandler ItemSaved;
 
-        public AddSourceForm(URLObject currentObject)
+        public AddSourceForm(UrlSource currentObject)
         {
             _currentObject = currentObject;
             InitializeComponent();
@@ -28,12 +28,18 @@ namespace Downloader
             {
                 AddSlash.Checked = _currentObject.AddSlash;
                 EpisodeFormat.Text = _currentObject.Format;
-                URL.Text = _currentObject.Value;
+                URL.Text = _currentObject.Mp4Url;
                 SeasonTextBox.Text = (_currentObject.Season).ToString();
                 NameTextBox.Text = _currentObject.Name;
                 IsLongSeason.Checked = _currentObject.IsLongSeason;
+                IncludeSiteUrl.Checked = !string.IsNullOrEmpty(_currentObject.SiteUrl);
 
-                _oldURL = _currentObject.Value;
+                if (IncludeSiteUrl.Checked)
+                {
+                    SiteUrl.Text = _currentObject.SiteUrl;
+                }
+
+                _oldURL = _currentObject.Mp4Url;
             }
 
             _configRepo = new ConfigRepository();
@@ -42,16 +48,11 @@ namespace Downloader
         private void AddSource_Click(object sender, EventArgs e)
         {
             var config = _configRepo.ReadConfig();
+            var source = new UrlSource();
 
-            config.Sources.Add(new URLObject
-            {
-                AddSlash = AddSlash.Checked,
-                IsLongSeason = IsLongSeason.Checked,
-                Format = EpisodeFormat.Text,
-                Name = NameTextBox.Text,
-                Value = URL.Text,
-                Season = string.IsNullOrEmpty(SeasonTextBox.Text) ? (int?)null : Convert.ToInt32(SeasonTextBox.Text)
-            });
+            FillSource(source);
+
+            config.Sources.Add(source);
 
             _configRepo.WriteConfig(config);
 
@@ -64,24 +65,14 @@ namespace Downloader
         {
             var config = _configRepo.ReadConfig();
 
-            var source = config.Sources.FirstOrDefault(x => x.Value == _oldURL);
+            var source = config.Sources.FirstOrDefault(x => x.Mp4Url == _oldURL);
 
             if (source != null)
             {
-                source.Format = EpisodeFormat.Text;
-                source.Value = URL.Text;
-                try
-                {
-                    source.Season = Convert.ToInt32(SeasonTextBox.Text);
-                }
-                catch (Exception)
-                {
-                }
-                source.Name = NameTextBox.Text;
-                source.IsLongSeason = IsLongSeason.Checked;
-                source.AddSlash = AddSlash.Checked;
+                FillSource(source);
 
                 _configRepo.WriteConfig(config);
+
                 ItemSaved(sender, e);
             }
             else
@@ -92,17 +83,44 @@ namespace Downloader
             Close();
         }
 
+        private void FillSource(UrlSource source)
+        {
+            source.Format = EpisodeFormat.Text;
+            source.Mp4Url = URL.Text;
+            source.Name = NameTextBox.Text;
+            source.IsLongSeason = IsLongSeason.Checked;
+            source.AddSlash = AddSlash.Checked;
+
+            try
+            {
+                source.Season = Convert.ToInt32(SeasonTextBox.Text);
+            }
+            catch (Exception)
+            {
+            }
+
+            if (IncludeSiteUrl.Checked)
+            {
+                source.SiteUrl = SiteUrl.Text;
+            }
+            else
+            {
+                source.SiteUrl = null;
+            }
+        }
+
         private void DeleteSource_Click(object sender, EventArgs e)
         {
             var config = _configRepo.ReadConfig();
 
-            var source = config.Sources.FirstOrDefault(x => x.Value == _oldURL);
+            var source = config.Sources.FirstOrDefault(x => x.Mp4Url == _oldURL);
 
             if (source != null)
             {
                 config.Sources.Remove(source);
 
                 _configRepo.WriteConfig(config);
+
                 ItemSaved(sender, e);
             }
             else
@@ -126,6 +144,11 @@ namespace Downloader
         private void AddSlash_CheckedChanged(object sender, EventArgs e)
         {
             FinalURL.Text = Helper.CreateURL(AddSlash.Checked, URL.Text, EpisodeFormat.Text);
+        }
+
+        private void IncludeSiteUrl_CheckedChanged(object sender, EventArgs e)
+        {
+            SiteUrl.Enabled = IncludeSiteUrl.Checked;
         }
     }
 }

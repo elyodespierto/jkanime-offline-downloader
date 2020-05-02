@@ -8,7 +8,7 @@ namespace Downloader.Repository
     {
         public AppConfig ReadConfig()
         {
-            using (StreamReader r = new StreamReader(AppConfigConstants.ConfigFileName))
+            using (StreamReader r = new StreamReader(Constants.ConfigFileName))
             {
                 string json = r.ReadToEnd();
 
@@ -18,7 +18,7 @@ namespace Downloader.Repository
 
         public void WriteConfig(AppConfig config)
         {
-            using (StreamWriter r = new StreamWriter(AppConfigConstants.ConfigFileName))
+            using (StreamWriter r = new StreamWriter(Constants.ConfigFileName))
             {
                 var json = JsonConvert.SerializeObject(config);
                 r.Write(json);

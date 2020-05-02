@@ -43,6 +43,9 @@
             this.AddSlash = new System.Windows.Forms.CheckBox();
             this.label5 = new System.Windows.Forms.Label();
             this.FinalURL = new System.Windows.Forms.Label();
+            this.labesldsjfklsj = new System.Windows.Forms.Label();
+            this.SiteUrl = new System.Windows.Forms.TextBox();
+            this.IncludeSiteUrl = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -65,7 +68,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 44);
+            this.label2.Location = new System.Drawing.Point(13, 81);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(45, 13);
             this.label2.TabIndex = 2;
@@ -73,7 +76,7 @@
             // 
             // EpisodeFormat
             // 
-            this.EpisodeFormat.Location = new System.Drawing.Point(64, 41);
+            this.EpisodeFormat.Location = new System.Drawing.Point(64, 78);
             this.EpisodeFormat.Name = "EpisodeFormat";
             this.EpisodeFormat.Size = new System.Drawing.Size(28, 20);
             this.EpisodeFormat.TabIndex = 3;
@@ -84,7 +87,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(363, 44);
+            this.label3.Location = new System.Drawing.Point(363, 81);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(44, 13);
             this.label3.TabIndex = 4;
@@ -93,7 +96,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 103);
+            this.label4.Location = new System.Drawing.Point(13, 140);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(61, 13);
             this.label4.TabIndex = 5;
@@ -101,14 +104,14 @@
             // 
             // NameTextBox
             // 
-            this.NameTextBox.Location = new System.Drawing.Point(413, 41);
+            this.NameTextBox.Location = new System.Drawing.Point(413, 78);
             this.NameTextBox.Name = "NameTextBox";
             this.NameTextBox.Size = new System.Drawing.Size(201, 20);
             this.NameTextBox.TabIndex = 6;
             // 
             // SeasonTextBox
             // 
-            this.SeasonTextBox.Location = new System.Drawing.Point(80, 100);
+            this.SeasonTextBox.Location = new System.Drawing.Point(80, 137);
             this.SeasonTextBox.Name = "SeasonTextBox";
             this.SeasonTextBox.Size = new System.Drawing.Size(28, 20);
             this.SeasonTextBox.TabIndex = 7;
@@ -117,7 +120,7 @@
             // AddSource
             // 
             this.AddSource.BackColor = System.Drawing.Color.DarkSeaGreen;
-            this.AddSource.Location = new System.Drawing.Point(16, 143);
+            this.AddSource.Location = new System.Drawing.Point(16, 180);
             this.AddSource.Name = "AddSource";
             this.AddSource.Size = new System.Drawing.Size(92, 23);
             this.AddSource.TabIndex = 8;
@@ -128,7 +131,7 @@
             // IsLongSeason
             // 
             this.IsLongSeason.AutoSize = true;
-            this.IsLongSeason.Location = new System.Drawing.Point(123, 102);
+            this.IsLongSeason.Location = new System.Drawing.Point(123, 139);
             this.IsLongSeason.Name = "IsLongSeason";
             this.IsLongSeason.Size = new System.Drawing.Size(125, 17);
             this.IsLongSeason.TabIndex = 9;
@@ -138,7 +141,7 @@
             // UpdateSource
             // 
             this.UpdateSource.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.UpdateSource.Location = new System.Drawing.Point(424, 143);
+            this.UpdateSource.Location = new System.Drawing.Point(424, 180);
             this.UpdateSource.Name = "UpdateSource";
             this.UpdateSource.Size = new System.Drawing.Size(92, 23);
             this.UpdateSource.TabIndex = 10;
@@ -149,7 +152,7 @@
             // DeleteSource
             // 
             this.DeleteSource.BackColor = System.Drawing.Color.RosyBrown;
-            this.DeleteSource.Location = new System.Drawing.Point(522, 143);
+            this.DeleteSource.Location = new System.Drawing.Point(522, 180);
             this.DeleteSource.Name = "DeleteSource";
             this.DeleteSource.Size = new System.Drawing.Size(92, 23);
             this.DeleteSource.TabIndex = 11;
@@ -160,7 +163,7 @@
             // AddSlash
             // 
             this.AddSlash.AutoSize = true;
-            this.AddSlash.Location = new System.Drawing.Point(108, 43);
+            this.AddSlash.Location = new System.Drawing.Point(108, 80);
             this.AddSlash.Name = "AddSlash";
             this.AddSlash.Size = new System.Drawing.Size(165, 17);
             this.AddSlash.TabIndex = 12;
@@ -171,7 +174,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(13, 74);
+            this.label5.Location = new System.Drawing.Point(13, 111);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(57, 13);
             this.label5.TabIndex = 0;
@@ -180,17 +183,46 @@
             // FinalURL
             // 
             this.FinalURL.AutoSize = true;
-            this.FinalURL.Location = new System.Drawing.Point(76, 74);
+            this.FinalURL.Location = new System.Drawing.Point(76, 111);
             this.FinalURL.Name = "FinalURL";
             this.FinalURL.Size = new System.Drawing.Size(13, 13);
             this.FinalURL.TabIndex = 13;
             this.FinalURL.Text = "  ";
             // 
+            // labesldsjfklsj
+            // 
+            this.labesldsjfklsj.AutoSize = true;
+            this.labesldsjfklsj.Location = new System.Drawing.Point(35, 47);
+            this.labesldsjfklsj.Name = "labesldsjfklsj";
+            this.labesldsjfklsj.Size = new System.Drawing.Size(50, 13);
+            this.labesldsjfklsj.TabIndex = 0;
+            this.labesldsjfklsj.Text = "Site URL";
+            // 
+            // SiteUrl
+            // 
+            this.SiteUrl.Enabled = false;
+            this.SiteUrl.Location = new System.Drawing.Point(91, 44);
+            this.SiteUrl.Name = "SiteUrl";
+            this.SiteUrl.Size = new System.Drawing.Size(523, 20);
+            this.SiteUrl.TabIndex = 14;
+            // 
+            // IncludeSiteUrl
+            // 
+            this.IncludeSiteUrl.AutoSize = true;
+            this.IncludeSiteUrl.Location = new System.Drawing.Point(16, 47);
+            this.IncludeSiteUrl.Name = "IncludeSiteUrl";
+            this.IncludeSiteUrl.Size = new System.Drawing.Size(15, 14);
+            this.IncludeSiteUrl.TabIndex = 15;
+            this.IncludeSiteUrl.UseVisualStyleBackColor = true;
+            this.IncludeSiteUrl.CheckedChanged += new System.EventHandler(this.IncludeSiteUrl_CheckedChanged);
+            // 
             // AddSourceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(626, 178);
+            this.ClientSize = new System.Drawing.Size(626, 215);
+            this.Controls.Add(this.IncludeSiteUrl);
+            this.Controls.Add(this.SiteUrl);
             this.Controls.Add(this.FinalURL);
             this.Controls.Add(this.AddSlash);
             this.Controls.Add(this.DeleteSource);
@@ -205,6 +237,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.URL);
             this.Controls.Add(this.label5);
+            this.Controls.Add(this.labesldsjfklsj);
             this.Controls.Add(this.label1);
             this.MaximizeBox = false;
             this.Name = "AddSourceForm";
@@ -233,5 +266,8 @@
         private System.Windows.Forms.CheckBox AddSlash;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label FinalURL;
+        private System.Windows.Forms.Label labesldsjfklsj;
+        private System.Windows.Forms.TextBox SiteUrl;
+        private System.Windows.Forms.CheckBox IncludeSiteUrl;
     }
 }

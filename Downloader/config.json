@@ -1,70 +1,105 @@
 ﻿{
-	"Sources": [
+  "Sources": [
     {
-      "Value": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia",
+      "AddSlash": true,
+      "IsLongSeason": false,
+      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia",
       "Format": "00",
       "Name": "boku-no-hero",
       "Season": 1,
       "Folder": "boku-no-hero",
-      "Text": "boku-no-hero   |    temporada-1",
-      "AddSlash": true
+      "Text": "boku-no-hero   |    temporada-1"
     },
     {
-      "Value": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia-2nd-season",
+      "AddSlash": true,
+      "IsLongSeason": false,
+      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia-2nd-season",
       "Format": "00",
       "Name": "boku-no-hero",
       "Season": 2,
       "Folder": "boku-no-hero",
-      "Text": "boku-no-hero   |    temporada-2",
-      "AddSlash": true
+      "Text": "boku-no-hero   |    temporada-2"
     },
     {
-      "Value": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia-3rd-season",
+      "AddSlash": true,
+      "IsLongSeason": false,
+      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia-3rd-season",
       "Format": "00",
       "Name": "boku-no-hero",
       "Season": 3,
       "Folder": "boku-no-hero",
-      "Text": "boku-no-hero   |    temporada-3",
-      "AddSlash": true
+      "Text": "boku-no-hero   |    temporada-3"
     },
     {
-      "Value": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia-4th-season",
+      "AddSlash": false,
+      "IsLongSeason": false,
+      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/miheroooac-",
       "Format": "00",
       "Name": "boku-no-hero",
       "Season": 4,
       "Folder": "boku-no-hero",
-      "Text": "boku-no-hero   |    temporada-4",
-      "AddSlash": true
+      "Text": "boku-no-hero   |    temporada-4"
     },
     {
-      "Value": "https://storage.googleapis.com/marosita.appspot.com/hunter-x-hunter-2011",
+      "AddSlash": true,
+      "IsLongSeason": true,
+      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/hunter-x-hunter-2011",
       "Format": "00",
       "Name": "hunter-x-hunter",
       "Season": null,
       "Folder": "hunter-x-hunter",
-      "Text": "hunter-x-hunter",
-      "IsLongSeason": true,
-      "AddSlash": true
+      "Text": "hunter-x-hunter"
     },
     {
-      "Value": "https://storage.googleapis.com/marosita.appspot.com/onepucman",
+      "AddSlash": true,
+      "IsLongSeason": false,
+      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/onepucman",
       "Format": "00",
       "Name": "one-punch-man",
       "Season": 1,
       "Folder": "one-punch-man",
-      "Text": "one-punch-man   |    temporada-1",
-      "AddSlash": true
+      "Text": "one-punch-man   |    temporada-1"
     },
     {
-      "Value": "https://storage.googleapis.com/marosita.appspot.com/fai1",
+      "AddSlash": true,
+      "IsLongSeason": true,
+      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/fai1",
       "Format": "00",
       "Name": "fairy-tail",
       "Season": 1,
       "Folder": "fairy-tail",
-      "Text": "fairy-tail   |    temporada-1",
+      "Text": "fairy-tail   |    temporada-1"
+    },
+    {
+      "AddSlash": true,
+      "IsLongSeason": false,
+      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/fullmetalbrotherbord",
+      "Format": "00",
+      "Name": "fullmetal-brotherhood",
+      "Season": null,
+      "Folder": "fullmetal-brotherhood",
+      "Text": "fullmetal-brotherhood"
+    },
+    {
+      "AddSlash": true,
       "IsLongSeason": true,
-      "AddSlash": true
+      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/blacoverss",
+      "Format": "00",
+      "Name": "black-clover",
+      "Season": null,
+      "Folder": "black-clover",
+      "Text": "black-clover"
+    },
+    {
+      "AddSlash": false,
+      "IsLongSeason": true,
+      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/slayerrrr-",
+      "Format": "00",
+      "Name": "kimetsu-no-yaiba",
+      "Season": 1,
+      "Folder": "kimetsu-no-yaiba",
+      "Text": "kimetsu-no-yaiba   |    temporada-1"
     }
-	],
-	"DefaultFolder": "G:\\anime"
+  ],
+  "DefaultFolder": "E:\\anime"
 }
