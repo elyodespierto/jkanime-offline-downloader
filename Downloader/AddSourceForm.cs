@@ -40,7 +40,7 @@ namespace Downloader
                     SiteUrl.Text = _currentObject.SiteUrl;
                 }
 
-                _oldURL = _currentObject.Mp4Url;
+                _oldURL = _currentObject.Url;
             }
 
             _configRepo = new ConfigRepository();
@@ -66,15 +66,20 @@ namespace Downloader
         {
             var config = _configRepo.ReadConfig();
 
-            var source = config.Sources.FirstOrDefault(x => x.Mp4Url == _oldURL);
+            var source = config.Sources.FirstOrDefault(x => x.Url == _oldURL);
 
             if (source != null)
             {
-                FillSource(source);
+                var dialogResult = MessageBox.Show("Seguro?", $"Modificar {source.Text}", MessageBoxButtons.YesNo);
 
-                _configRepo.WriteConfig(config);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    FillSource(source);
 
-                ItemSaved(sender, e);
+                    _configRepo.WriteConfig(config);
+
+                    ItemSaved(sender, e);
+                }
             }
             else
             {
@@ -124,15 +129,20 @@ namespace Downloader
         {
             var config = _configRepo.ReadConfig();
 
-            var source = config.Sources.FirstOrDefault(x => x.Mp4Url == _oldURL);
+            var source = config.Sources.FirstOrDefault(x => x.Url == _oldURL);
 
             if (source != null)
             {
-                config.Sources.Remove(source);
+                var dialogResult = MessageBox.Show("Seguro?", $"Eliminar {source.Text}", MessageBoxButtons.YesNo);
 
-                _configRepo.WriteConfig(config);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    config.Sources.Remove(source);
 
-                ItemSaved(sender, e);
+                    _configRepo.WriteConfig(config);
+
+                    ItemSaved(sender, e);
+                }
             }
             else
             {
@@ -176,7 +186,6 @@ namespace Downloader
 
         private void Shadow_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void SiteUrl_TextChanged(object sender, EventArgs e)
