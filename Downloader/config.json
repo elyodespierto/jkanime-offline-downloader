@@ -8,8 +8,10 @@
       "Format": "00",
       "Name": "boku-no-hero",
       "Season": 1,
+      "EpisodeAmount": 13,
       "Folder": "boku-no-hero",
-      "Text": "boku-no-hero   |    temporada-1"
+      "Text": "boku-no-hero   |    temporada-1",
+      "Url": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia"
     },
     {
       "AddSlash": true,
@@ -19,41 +21,49 @@
       "Format": "00",
       "Name": "boku-no-hero",
       "Season": 2,
+      "EpisodeAmount": 25,
       "Folder": "boku-no-hero",
-      "Text": "boku-no-hero   |    temporada-2"
+      "Text": "boku-no-hero   |    temporada-2",
+      "Url": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia-2nd-season"
     },
     {
       "AddSlash": true,
       "IsLongSeason": false,
-      "SiteUrl": null,
-      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia-3rd-season",
+      "SiteUrl": "https://jkanime.net/boku-no-hero-academia-3rd-season",
+      "Mp4Url": null,
       "Format": "00",
       "Name": "boku-no-hero",
       "Season": 3,
+      "EpisodeAmount": 25,
       "Folder": "boku-no-hero",
-      "Text": "boku-no-hero   |    temporada-3"
+      "Text": "boku-no-hero   |    temporada-3",
+      "Url": "https://jkanime.net/boku-no-hero-academia-3rd-season"
     },
     {
       "AddSlash": false,
       "IsLongSeason": false,
-      "SiteUrl": null,
-      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/miheroooac-",
+      "SiteUrl": "https://jkanime.net/boku-no-hero-academia-4th-season",
+      "Mp4Url": null,
       "Format": "00",
       "Name": "boku-no-hero",
       "Season": 4,
+      "EpisodeAmount": 25,
       "Folder": "boku-no-hero",
-      "Text": "boku-no-hero   |    temporada-4"
+      "Text": "boku-no-hero   |    temporada-4",
+      "Url": "https://jkanime.net/boku-no-hero-academia-4th-season"
     },
     {
       "AddSlash": true,
       "IsLongSeason": true,
-      "SiteUrl": null,
-      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/hunter-x-hunter-2011",
+      "SiteUrl": "https://jkanime.net/hunter-x-hunter-2011",
+      "Mp4Url": null,
       "Format": "00",
       "Name": "hunter-x-hunter",
       "Season": null,
+      "EpisodeAmount": 148,
       "Folder": "hunter-x-hunter",
-      "Text": "hunter-x-hunter"
+      "Text": "hunter-x-hunter",
+      "Url": "https://jkanime.net/hunter-x-hunter-2011"
     },
     {
       "AddSlash": true,
@@ -63,41 +73,49 @@
       "Format": "00",
       "Name": "one-punch-man",
       "Season": 1,
+      "EpisodeAmount": 12,
       "Folder": "one-punch-man",
-      "Text": "one-punch-man   |    temporada-1"
+      "Text": "one-punch-man   |    temporada-1",
+      "Url": "https://storage.googleapis.com/marosita.appspot.com/onepucman"
     },
     {
       "AddSlash": true,
       "IsLongSeason": true,
-      "SiteUrl": null,
-      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/fai1",
+      "SiteUrl": "https://jkanime.net/fairy-tail/",
+      "Mp4Url": null,
       "Format": "00",
       "Name": "fairy-tail",
       "Season": 1,
+      "EpisodeAmount": 175,
       "Folder": "fairy-tail",
-      "Text": "fairy-tail   |    temporada-1"
+      "Text": "fairy-tail   |    temporada-1",
+      "Url": "https://jkanime.net/fairy-tail/"
     },
     {
       "AddSlash": true,
       "IsLongSeason": false,
-      "SiteUrl": null,
-      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/fullmetalbrotherbord",
+      "SiteUrl": "https://jkanime.net/fullmetal-alchemist-brotherhood/",
+      "Mp4Url": null,
       "Format": "00",
       "Name": "fullmetal-brotherhood",
       "Season": null,
+      "EpisodeAmount": 64,
       "Folder": "fullmetal-brotherhood",
-      "Text": "fullmetal-brotherhood"
+      "Text": "fullmetal-brotherhood",
+      "Url": "https://jkanime.net/fullmetal-alchemist-brotherhood/"
     },
     {
       "AddSlash": true,
       "IsLongSeason": true,
-      "SiteUrl": null,
-      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/blacoverss",
+      "SiteUrl": "https://jkanime.net/black-clover-tv/",
+      "Mp4Url": null,
       "Format": "00",
       "Name": "black-clover",
       "Season": null,
+      "EpisodeAmount": null,
       "Folder": "black-clover",
-      "Text": "black-clover"
+      "Text": "black-clover",
+      "Url": "https://jkanime.net/black-clover-tv/"
     },
     {
       "AddSlash": false,
@@ -107,8 +125,36 @@
       "Format": "00",
       "Name": "kimetsu-no-yaiba",
       "Season": 1,
+      "EpisodeAmount": null,
       "Folder": "kimetsu-no-yaiba",
-      "Text": "kimetsu-no-yaiba   |    temporada-1"
+      "Text": "kimetsu-no-yaiba   |    temporada-1",
+      "Url": "https://jkanime.net/kimetsu-no-yaiba/"
+    },
+    {
+      "AddSlash": false,
+      "IsLongSeason": false,
+      "SiteUrl": "https://jkanime.net/shingeki-no-kyojin",
+      "Mp4Url": null,
+      "Format": "00",
+      "Name": "shingeki-no-kyojin",
+      "Season": 1,
+      "EpisodeAmount": null,
+      "Folder": "shingeki-no-kyojin",
+      "Text": "shingeki-no-kyojin   |    temporada-1",
+      "Url": "https://jkanime.net/shingeki-no-kyojin"
+    },
+    {
+      "AddSlash": true,
+      "IsLongSeason": false,
+      "SiteUrl": "https://jkanime.net/one-punch-man-2nd-season",
+      "Mp4Url": null,
+      "Format": "00",
+      "Name": "one-punch-man",
+      "Season": 2,
+      "EpisodeAmount": 12,
+      "Folder": "one-punch-man",
+      "Text": "one-punch-man   |    temporada-2",
+      "Url": "https://jkanime.net/one-punch-man-2nd-season"
     }
   ],
   "DefaultFolder": "E:\\anime"

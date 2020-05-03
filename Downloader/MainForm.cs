@@ -22,6 +22,7 @@ namespace Downloader
         private WebClient _currentClient;
         private ConfigRepository _configRepository;
         private LogRepository _log;
+        private bool _bulkStarted;
 
         public MainForm()
         {
@@ -60,12 +61,45 @@ namespace Downloader
             var config = _configRepository.ReadConfig();
             var tasks = new ConcurrentBag<Task>();
 
-            foreach (var source in config.Sources)
-            {
-                UpdateUI(source);
+            _bulkStarted = true;
 
-                await DownloadNext(source);
+            foreach (var source in config.Sources.OrderBy(x => x.Name))
+            {
+                if (_bulkStarted)
+                {
+                    UpdateUI(source);
+
+                    Append($"-> Bulk Comenzado ({source.Text})");
+
+                    await DownloadNext(source);
+
+                    Append($"-> Bulk Finalizado ({source.Text})");
+                }
+                else
+                {
+                    Append($"-> Descarga Cancelada: {source.Url}");
+                }
             }
+        }
+
+        private void Append(string log)
+        {
+            _log.Append(log);
+            Status.Append(log);
+        }
+
+        private void Append(string status, string log)
+        {
+            _log.Append(status);
+            _log.Append(log);
+            Status.Append(status);
+        }
+
+        private void Append(string log, Exception ex)
+        {
+            _log.Append(log);
+            _log.Append(ex);
+            Status.Append(log);
         }
 
         private async Task DownloadNext(UrlSource source)
@@ -89,9 +123,16 @@ namespace Downloader
 
                 try
                 {
-                    if (!string.IsNullOrEmpty(To.Text))
+                    if (source.EpisodeAmount.HasValue)
                     {
-                        toIndex = Convert.ToInt32(To.Text);
+                        toIndex = source.EpisodeAmount.Value;
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(To.Text))
+                        {
+                            toIndex = Convert.ToInt32(To.Text);
+                        }
                     }
                 }
                 catch
@@ -115,8 +156,7 @@ namespace Downloader
             }
             catch (Exception ex)
             {
-                _log.Append(ex);
-                Status.Append("-> Fatal: error no handleado en DownloadNext(source). Ver log.");
+                Append("-> FATAL: error no handleado en DownloadNext(source). Ver log.", ex);
             }
         }
 
@@ -128,8 +168,6 @@ namespace Downloader
                 {
                     if (fromIndex > toIndex || amount < 1)
                     {
-                        _log.Append($"Proceso [{source.Text}] finalizado.");
-                        Status.Append($"-> Proceso [{source.Text}] finalizado.");
                     }
                     else
                     {
@@ -156,27 +194,30 @@ namespace Downloader
 
                         if (File.Exists(fileDestination))
                         {
+                            Append($"-> Ya Existe {mediaName}");
+
                             await DownloadNext(source, fromIndex + 1, toIndex, amount);
                         }
                         else
                         {
-                            Status.Append($"Descargando {mediaName}");
-
                             var tasks = new ConcurrentBag<Task>();
 
-                            var finalUrl = Helper.CreateURL(source.AddSlash, source.Mp4Url, episodeNumber);
+                            var finalUrl = source.Url;
 
                             if (!string.IsNullOrEmpty(source.SiteUrl))
                             {
-                                finalUrl = Helper.Combine(source.SiteUrl, fromIndex.ToString());
+                                finalUrl = Helper.Combine(source.Url, fromIndex.ToString());
+                            }
+                            else
+                            {
+                                finalUrl = Helper.CreateURL(source.AddSlash, source.Url, episodeNumber);
                             }
 
                             client.DownloadFileCompleted += (s, e) =>
                             {
                                 if (e.Cancelled)
                                 {
-                                    _log.Append($"Ultima descarga cancelada");
-                                    Status.Append($"-> Ultima descarga cancelada: {mediaName}");
+                                    Append($"-> Ultima descarga cancelada: {mediaName}");
 
                                     if (File.Exists(fileDestination))
                                     {
@@ -185,12 +226,7 @@ namespace Downloader
                                 }
                                 else if (e.Error != null)
                                 {
-                                    _log.Append($"Error al descargar {mediaName}. " +
-                                        $"{Environment.NewLine}" +
-                                        $"Error: {e.Error.Message}" +
-                                        $"{Environment.NewLine}" +
-                                        $"URLError: {finalUrl}");
-                                    Status.Append($"-> Error al descargar {mediaName}");
+                                    Append($"-> Error al descargar {mediaName}", $"Error: {e.Error.Message}{Environment.NewLine}URLError: {finalUrl}");
 
                                     if (File.Exists(fileDestination))
                                     {
@@ -213,14 +249,14 @@ namespace Downloader
 
                                 browser.DocumentCompleted += async (s, e) =>
                                 {
-                                    var htmlDocument = browser.Document.Window.Frames
+                                    try
+                                    {
+                                        var htmlDocument = browser.Document.Window.Frames
                                         .Cast<HtmlWindow>()
                                         .Select(x => x.GetDocument())
                                         .FirstOrDefault(x => x.Url.ToString().Contains("jkanime"));
 
-                                    if (htmlDocument != null)
-                                    {
-                                        try
+                                        if (htmlDocument != null)
                                         {
                                             browser.Dispose();
 
@@ -230,32 +266,34 @@ namespace Downloader
 
                                             var tag = chromeDriver.FindElementByTagName("source").GetAttribute("src");
 
-                                            var videoUrl = chromeDriver.FindElementByTagName("video").FindElement(By.TagName("source")).GetAttribute("src");
+                                            finalUrl = chromeDriver.FindElementByTagName("video").FindElement(By.TagName("source")).GetAttribute("src");
 
                                             chromeDriver.Quit();
-
-                                            await client.DownloadFileTaskAsync(videoUrl, fileDestination).ContinueWith(WaitTasks(tasks));
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            _log.Append(ex);
-                                            Status.Append("-> Fatal: error al intentar obtener video URL. Ver log.");
                                         }
                                     }
+                                    catch (Exception ex)
+                                    {
+                                        Append("-> FATAL: error al intentar obtener video URL. Ver log.", ex);
+                                    }
                                 };
+
+                                await Task.WhenAll(tasks.ToArray());
                             }
-                            else
-                            {
-                                await client.DownloadFileTaskAsync(finalUrl, fileDestination).ContinueWith(WaitTasks(tasks));
-                            }
+
+                            URL.Text = finalUrl;
+
+                            Append($"<- Descargando {mediaName}");
+
+                            await client.DownloadFileTaskAsync(finalUrl, fileDestination).ContinueWith(WaitTasks(tasks));
+
+                            Append($"-> Finalizado {mediaName}");
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                _log.Append(ex);
-                Status.Append("-> Fatal: error no handleado en DownloadNext(source, int, int, int). Ver log.");
+                Append("-> FATAL: error no handleado en DownloadNext(source, int, int, int). Ver log.", ex);
             }
         }
 
@@ -263,7 +301,7 @@ namespace Downloader
         {
             return clientTask =>
             {
-                Thread.Sleep(100);
+                Thread.Sleep(500);
 
                 Task.WaitAll(tasks.ToArray());
             };
@@ -324,6 +362,17 @@ namespace Downloader
         {
             URL.Text = source.Url;
             FolderName.Text = source.Folder;
+
+            if (source.EpisodeAmount.HasValue)
+            {
+                To.Text = source.EpisodeAmount.ToString();
+            }
+            else
+            {
+                To.Text = string.Empty;
+            }
+
+            From.Text = "1";
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -373,20 +422,38 @@ namespace Downloader
 
         private void CancelCurrentDownload_Click(object sender, EventArgs e)
         {
+            _bulkStarted = false;
+
             if (_currentClient != null)
             {
                 if (_currentClient.IsBusy)
                 {
                     _currentClient.CancelAsync();
 
-                    _log.Append($"Cancelando descarga. Aguarde...");
-                    Status.Append($"-> Cancelando descarga. Aguarde...");
+                    Append($"-> Cancelando descarga. Aguarde...");
                 }
             }
         }
 
         private void SetAsDefaultCheckBox_CheckedChanged(object sender, EventArgs e)
         {
+        }
+
+        private void Close_Click(object sender, EventArgs e)
+        {
+            if (_currentClient.IsBusy)
+            {
+                _currentClient.DownloadFileCompleted += (s2, e2) =>
+                {
+                    Close();
+                };
+
+                Append("-> Esperando última descarga para cerrar. ESPERE!");
+            }
+            else
+            {
+                Close();
+            }
         }
     }
 }

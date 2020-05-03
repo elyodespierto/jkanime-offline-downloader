@@ -11,7 +11,7 @@ namespace Downloader.Utils
 
             if (addSlash)
             {
-                return url + "/" + mp4formatNumber;
+                return Path.Combine(url, episodeNumber).Replace("\\", "/");
             }
             else
             {
@@ -21,7 +21,7 @@ namespace Downloader.Utils
 
         public static string Combine(string part1, string part2)
         {
-            return Path.Combine(part1, part2);
+            return Path.Combine(part1, part2).Replace("\\", "/");
         }
 
         public static string GetLogTime()

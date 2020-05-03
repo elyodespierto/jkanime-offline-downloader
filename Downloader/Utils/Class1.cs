@@ -13,7 +13,9 @@ namespace Downloader.Utils
 
             browser.Navigate(url);
 
-            return Task.Factory.StartNew((Action)(() =>
+            browser.DocumentCompleted += (s, e) => { manualEvent.Set(); };
+
+            return Task.Factory.StartNew((() =>
             {
                 manualEvent.WaitOne();
                 manualEvent.Reset();

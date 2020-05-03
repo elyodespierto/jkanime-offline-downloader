@@ -33,6 +33,7 @@ namespace Downloader
                 NameTextBox.Text = _currentObject.Name;
                 IsLongSeason.Checked = _currentObject.IsLongSeason;
                 IncludeSiteUrl.Checked = !string.IsNullOrEmpty(_currentObject.SiteUrl);
+                EpisodeAmount.Text = _currentObject.EpisodeAmount?.ToString();
 
                 if (IncludeSiteUrl.Checked)
                 {
@@ -94,6 +95,14 @@ namespace Downloader
             try
             {
                 source.Season = Convert.ToInt32(SeasonTextBox.Text);
+            }
+            catch (Exception)
+            {
+            }
+
+            try
+            {
+                source.EpisodeAmount = Convert.ToInt32(EpisodeAmount.Text);
             }
             catch (Exception)
             {

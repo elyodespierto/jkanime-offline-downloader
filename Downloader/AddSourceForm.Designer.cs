@@ -47,6 +47,8 @@
             this.SiteUrl = new System.Windows.Forms.TextBox();
             this.IncludeSiteUrl = new System.Windows.Forms.CheckBox();
             this.Shadow = new System.Windows.Forms.TextBox();
+            this.EpisodeAmount = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // Mp4UrlLabel
@@ -228,11 +230,30 @@
             this.Shadow.Visible = false;
             this.Shadow.TextChanged += new System.EventHandler(this.Shadow_TextChanged);
             // 
+            // EpisodeAmount
+            // 
+            this.EpisodeAmount.Location = new System.Drawing.Point(577, 111);
+            this.EpisodeAmount.Name = "EpisodeAmount";
+            this.EpisodeAmount.Size = new System.Drawing.Size(37, 20);
+            this.EpisodeAmount.TabIndex = 17;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(476, 114);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(95, 13);
+            this.label1.TabIndex = 18;
+            this.label1.Text = "Cantidad Capitulos";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // AddSourceForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(626, 215);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.EpisodeAmount);
             this.Controls.Add(this.IncludeSiteUrl);
             this.Controls.Add(this.SiteUrl);
             this.Controls.Add(this.FinalURL);
@@ -283,5 +304,7 @@
         private System.Windows.Forms.TextBox SiteUrl;
         private System.Windows.Forms.CheckBox IncludeSiteUrl;
         private System.Windows.Forms.TextBox Shadow;
+        private System.Windows.Forms.TextBox EpisodeAmount;
+        private System.Windows.Forms.Label label1;
     }
 }

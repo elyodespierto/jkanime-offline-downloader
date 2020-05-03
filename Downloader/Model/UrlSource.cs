@@ -19,6 +19,7 @@
         public string Format { get; set; }
         public string Name { get; set; }
         public int? Season { get; set; }
+        public int? EpisodeAmount { get; set; }
         public string Folder => Name;
         public virtual string Text => Season.HasValue ? $"{Name}   |    temporada-{Season}" : $"{Name}";
         public string Url => string.IsNullOrEmpty(SiteUrl) ? Mp4Url : SiteUrl;

@@ -49,6 +49,7 @@
             this.DownloadAll = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.Amount = new System.Windows.Forms.TextBox();
+            this.Close = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Download
@@ -242,11 +243,23 @@
             this.Amount.Size = new System.Drawing.Size(35, 20);
             this.Amount.TabIndex = 18;
             // 
+            // Close
+            // 
+            this.Close.Location = new System.Drawing.Point(306, 228);
+            this.Close.Name = "Close";
+            this.Close.Size = new System.Drawing.Size(75, 23);
+            this.Close.TabIndex = 19;
+            this.Close.Text = "Cerrar";
+            this.Close.UseVisualStyleBackColor = true;
+            this.Close.Click += new System.EventHandler(this.Close_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(506, 313);
+            this.ControlBox = false;
+            this.Controls.Add(this.Close);
             this.Controls.Add(this.Amount);
             this.Controls.Add(this.DownloadAll);
             this.Controls.Add(this.Status);
@@ -301,6 +314,7 @@
         private System.Windows.Forms.Button DownloadAll;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox Amount;
+        private System.Windows.Forms.Button Close;
     }
 }
 
