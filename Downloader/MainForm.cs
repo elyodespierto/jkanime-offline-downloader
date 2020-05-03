@@ -441,7 +441,7 @@ namespace Downloader
 
         private void Close_Click(object sender, EventArgs e)
         {
-            if (_currentClient.IsBusy)
+            if (_currentClient != null && _currentClient.IsBusy)
             {
                 _currentClient.DownloadFileCompleted += (s2, e2) =>
                 {

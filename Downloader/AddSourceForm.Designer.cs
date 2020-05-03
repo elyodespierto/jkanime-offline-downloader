@@ -232,7 +232,7 @@
             // 
             // EpisodeAmount
             // 
-            this.EpisodeAmount.Location = new System.Drawing.Point(577, 111);
+            this.EpisodeAmount.Location = new System.Drawing.Point(577, 137);
             this.EpisodeAmount.Name = "EpisodeAmount";
             this.EpisodeAmount.Size = new System.Drawing.Size(37, 20);
             this.EpisodeAmount.TabIndex = 17;
@@ -240,7 +240,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(476, 114);
+            this.label1.Location = new System.Drawing.Point(476, 140);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(95, 13);
             this.label1.TabIndex = 18;

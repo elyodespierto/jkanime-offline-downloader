@@ -54,12 +54,14 @@
             // 
             // Download
             // 
+            this.Download.BackColor = System.Drawing.Color.Honeydew;
+            this.Download.ForeColor = System.Drawing.Color.DarkSlateGray;
             this.Download.Location = new System.Drawing.Point(12, 228);
             this.Download.Name = "Download";
             this.Download.Size = new System.Drawing.Size(110, 23);
             this.Download.TabIndex = 0;
             this.Download.Text = "Descargar";
-            this.Download.UseVisualStyleBackColor = true;
+            this.Download.UseVisualStyleBackColor = false;
             this.Download.Click += new System.EventHandler(this.ButtonDownload_Click);
             // 
             // URL
@@ -169,12 +171,13 @@
             // 
             // CancelCurrentDownload
             // 
-            this.CancelCurrentDownload.Location = new System.Drawing.Point(387, 228);
+            this.CancelCurrentDownload.BackColor = System.Drawing.Color.LightCoral;
+            this.CancelCurrentDownload.Location = new System.Drawing.Point(387, 200);
             this.CancelCurrentDownload.Name = "CancelCurrentDownload";
             this.CancelCurrentDownload.Size = new System.Drawing.Size(110, 23);
             this.CancelCurrentDownload.TabIndex = 14;
             this.CancelCurrentDownload.Text = "Cancelar Descarga";
-            this.CancelCurrentDownload.UseVisualStyleBackColor = true;
+            this.CancelCurrentDownload.UseVisualStyleBackColor = false;
             this.CancelCurrentDownload.Click += new System.EventHandler(this.CancelCurrentDownload_Click);
             // 
             // SetAsDefault
@@ -195,7 +198,7 @@
             this.Status.Name = "Status";
             this.Status.ReadOnly = true;
             this.Status.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.Status.Size = new System.Drawing.Size(485, 44);
+            this.Status.Size = new System.Drawing.Size(485, 96);
             this.Status.TabIndex = 16;
             // 
             // label4
@@ -218,7 +221,8 @@
             // 
             // DownloadAll
             // 
-            this.DownloadAll.BackColor = System.Drawing.Color.RosyBrown;
+            this.DownloadAll.BackColor = System.Drawing.Color.DarkGreen;
+            this.DownloadAll.ForeColor = System.Drawing.SystemColors.Control;
             this.DownloadAll.Location = new System.Drawing.Point(128, 228);
             this.DownloadAll.Name = "DownloadAll";
             this.DownloadAll.Size = new System.Drawing.Size(109, 23);
@@ -245,9 +249,9 @@
             // 
             // Close
             // 
-            this.Close.Location = new System.Drawing.Point(306, 228);
+            this.Close.Location = new System.Drawing.Point(387, 228);
             this.Close.Name = "Close";
-            this.Close.Size = new System.Drawing.Size(75, 23);
+            this.Close.Size = new System.Drawing.Size(110, 23);
             this.Close.TabIndex = 19;
             this.Close.Text = "Cerrar";
             this.Close.UseVisualStyleBackColor = true;
@@ -257,7 +261,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(506, 313);
+            this.ClientSize = new System.Drawing.Size(506, 365);
             this.ControlBox = false;
             this.Controls.Add(this.Close);
             this.Controls.Add(this.Amount);
