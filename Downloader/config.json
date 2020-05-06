@@ -155,6 +155,19 @@
       "Folder": "one-punch-man",
       "Text": "one-punch-man   |    temporada-2",
       "Url": "https://jkanime.net/one-punch-man-2nd-season"
+    },
+    {
+      "AddSlash": false,
+      "IsLongSeason": true,
+      "SiteUrl": "https://www3.jkanime.video/dragon-ball-super-latino",
+      "Mp4Url": null,
+      "Format": "00",
+      "Name": "dragon-ball-super",
+      "Season": null,
+      "EpisodeAmount": 131,
+      "Folder": "dragon-ball-super",
+      "Text": "dragon-ball-super",
+      "Url": "https://www3.jkanime.video/dragon-ball-super-latino"
     }
   ],
   "DefaultFolder": "E:\\anime"

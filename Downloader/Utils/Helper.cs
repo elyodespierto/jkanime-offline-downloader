@@ -21,7 +21,14 @@ namespace Downloader.Utils
 
         public static string Combine(string part1, string part2)
         {
-            return Path.Combine(part1, part2).Replace("\\", "/");
+            var finalPath = Path.Combine(part1, part2).Replace("\\", "/");
+
+            if (!finalPath.EndsWith("/"))
+            {
+                finalPath += "/";
+            }
+
+            return finalPath;
         }
 
         public static string GetLogTime()

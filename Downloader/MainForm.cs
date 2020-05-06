@@ -235,6 +235,8 @@ namespace Downloader
                                 }
                                 else
                                 {
+                                    Append($"-> Finalizado {mediaName}");
+
                                     tasks.Add(DownloadNext(source, fromIndex + 1, toIndex, amount - 1));
                                 }
                             };
@@ -245,9 +247,9 @@ namespace Downloader
 
                                 browser.ScriptErrorsSuppressed = true;
 
-                                tasks.Add(browser.NavigateAsync(Path.Combine(source.SiteUrl, fromIndex.ToString())));
+                                tasks.Add(browser.NavigateAsync(finalUrl));
 
-                                browser.DocumentCompleted += async (s, e) =>
+                                browser.DocumentCompleted += (s, e) =>
                                 {
                                     try
                                     {
@@ -260,15 +262,27 @@ namespace Downloader
                                         {
                                             browser.Dispose();
 
-                                            var chromeDriver = new ChromeDriver();
+                                            var driver = new ChromeDriver();
 
-                                            chromeDriver.Navigate().GoToUrl(htmlDocument.Url.ToString());
+                                            driver.Navigate().GoToUrl(htmlDocument.Url.ToString());
 
-                                            var tag = chromeDriver.FindElementByTagName("source").GetAttribute("src");
+                                            var tag = driver.FindElementByTagName("source").GetAttribute("src");
 
-                                            finalUrl = chromeDriver.FindElementByTagName("video").FindElement(By.TagName("source")).GetAttribute("src");
+                                            finalUrl = driver.FindElementByTagName("video").FindElement(By.TagName("source")).GetAttribute("src");
 
-                                            chromeDriver.Quit();
+                                            driver.Quit();
+                                        }
+                                        else
+                                        {
+                                            var driver = new ChromeDriver();
+
+                                            driver.Navigate().GoToUrl(finalUrl);
+
+                                            var iframe = driver.FindElements(By.TagName("iframe")).FirstOrDefault(x => x.GetAttribute("src").Contains("cloud9"));
+
+                                            driver.SwitchTo().Frame(iframe);
+
+                                            var pageSource = driver.PageSource;
                                         }
                                     }
                                     catch (Exception ex)
@@ -284,9 +298,12 @@ namespace Downloader
 
                             Append($"<- Descargando {mediaName}");
 
-                            await client.DownloadFileTaskAsync(finalUrl, fileDestination).ContinueWith(WaitTasks(tasks));
+                            await client.DownloadFileTaskAsync(finalUrl, fileDestination).ContinueWith(task =>
+                            {
+                                Thread.Sleep(500);
 
-                            Append($"-> Finalizado {mediaName}");
+                                Task.WaitAll(tasks.ToArray());
+                            });
                         }
                     }
                 }
@@ -295,16 +312,6 @@ namespace Downloader
             {
                 Append("-> FATAL: error no handleado en DownloadNext(source, int, int, int). Ver log.", ex);
             }
-        }
-
-        private static Action<Task> WaitTasks(ConcurrentBag<Task> tasks)
-        {
-            return clientTask =>
-            {
-                Thread.Sleep(500);
-
-                Task.WaitAll(tasks.ToArray());
-            };
         }
 
         private string GetFinalDestination(Label updatingLabel, UrlSource source)
