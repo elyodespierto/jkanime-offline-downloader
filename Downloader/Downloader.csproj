@@ -57,32 +57,46 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AddSourceForm.cs">
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Logic\FileLogic.cs" />
+    <Compile Include="Model\CopyGridItem.cs" />
+    <Compile Include="UI\AddSourceForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddSourceForm.Designer.cs">
+    <Compile Include="UI\AddSourceForm.Designer.cs">
       <DependentUpon>AddSourceForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Extensions\TextBoxExtensions.cs" />
     <Compile Include="Model\AppConfig.cs" />
-    <Compile Include="MainForm.cs">
+    <Compile Include="UI\CopyForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MainForm.Designer.cs">
+    <Compile Include="UI\CopyForm.Designer.cs">
+      <DependentUpon>CopyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\Constants.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\UrlSource.cs" />
     <Compile Include="Repository\LogRepository.cs" />
     <Compile Include="Repository\ConfigRepository.cs" />
-    <Compile Include="Utils\Class1.cs" />
+    <Compile Include="UI\SelectedToCopyGridItem.cs" />
+    <Compile Include="Utils\ThirdParty\WebBrowserExtensions.cs" />
     <Compile Include="Utils\Helper.cs" />
-    <Compile Include="Utils\Mistyc.cs" />
-    <EmbeddedResource Include="AddSourceForm.resx">
+    <Compile Include="Utils\ThirdParty\CrossFrame.cs" />
+    <EmbeddedResource Include="UI\AddSourceForm.resx">
       <DependentUpon>AddSourceForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
+    <EmbeddedResource Include="UI\CopyForm.resx">
+      <DependentUpon>CopyForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">

@@ -50,11 +50,13 @@
             this.label5 = new System.Windows.Forms.Label();
             this.Amount = new System.Windows.Forms.TextBox();
             this.Close = new System.Windows.Forms.Button();
+            this.Copy = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // Download
             // 
             this.Download.BackColor = System.Drawing.Color.Honeydew;
+            this.Download.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Download.ForeColor = System.Drawing.Color.DarkSlateGray;
             this.Download.Location = new System.Drawing.Point(12, 228);
             this.Download.Name = "Download";
@@ -172,6 +174,7 @@
             // CancelCurrentDownload
             // 
             this.CancelCurrentDownload.BackColor = System.Drawing.Color.LightCoral;
+            this.CancelCurrentDownload.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.CancelCurrentDownload.Location = new System.Drawing.Point(387, 200);
             this.CancelCurrentDownload.Name = "CancelCurrentDownload";
             this.CancelCurrentDownload.Size = new System.Drawing.Size(110, 23);
@@ -222,8 +225,9 @@
             // DownloadAll
             // 
             this.DownloadAll.BackColor = System.Drawing.Color.DarkGreen;
+            this.DownloadAll.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.DownloadAll.ForeColor = System.Drawing.SystemColors.Control;
-            this.DownloadAll.Location = new System.Drawing.Point(128, 228);
+            this.DownloadAll.Location = new System.Drawing.Point(388, 171);
             this.DownloadAll.Name = "DownloadAll";
             this.DownloadAll.Size = new System.Drawing.Size(109, 23);
             this.DownloadAll.TabIndex = 17;
@@ -257,12 +261,25 @@
             this.Close.UseVisualStyleBackColor = true;
             this.Close.Click += new System.EventHandler(this.Close_Click);
             // 
+            // Copy
+            // 
+            this.Copy.BackColor = System.Drawing.Color.PaleTurquoise;
+            this.Copy.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.Copy.Location = new System.Drawing.Point(388, 142);
+            this.Copy.Name = "Copy";
+            this.Copy.Size = new System.Drawing.Size(109, 23);
+            this.Copy.TabIndex = 20;
+            this.Copy.Text = "Copiar";
+            this.Copy.UseVisualStyleBackColor = false;
+            this.Copy.Click += new System.EventHandler(this.Copy_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(506, 365);
             this.ControlBox = false;
+            this.Controls.Add(this.Copy);
             this.Controls.Add(this.Close);
             this.Controls.Add(this.Amount);
             this.Controls.Add(this.DownloadAll);
@@ -319,6 +336,7 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox Amount;
         private System.Windows.Forms.Button Close;
+        private System.Windows.Forms.Button Copy;
     }
 }
 

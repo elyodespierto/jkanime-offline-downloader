@@ -7,7 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Downloader.Extensions;
+using Downloader.Logic;
 using Downloader.Repository;
+using Downloader.UI;
 using Downloader.Utils;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -173,18 +175,7 @@ namespace Downloader
                     {
                         _currentClient = client;
 
-                        var episodeNumber = fromIndex.ToString(source.Format);
-
-                        var season = string.Empty;
-
-                        if (source.Season.HasValue)
-                        {
-                            season = $"S{source.Season.Value.ToString("00")}";
-                        }
-
-                        var episodeFormat = source.IsLongSeason ? "000" : source.Format;
-
-                        var mediaName = $"{source.Name}_{season}E{fromIndex.ToString(episodeFormat)}.mp4";
+                        string mediaName = GetMediaName(source, fromIndex);
 
                         string destination = GetFinalDestination(FinalDestination, source);
 
@@ -194,7 +185,7 @@ namespace Downloader
 
                         if (File.Exists(fileDestination))
                         {
-                            Append($"-> Ya Existe {mediaName}");
+                            _log.Append($"-> Ya Existe {mediaName}");
 
                             await DownloadNext(source, fromIndex + 1, toIndex, amount);
                         }
@@ -202,16 +193,7 @@ namespace Downloader
                         {
                             var tasks = new ConcurrentBag<Task>();
 
-                            var finalUrl = source.Url;
-
-                            if (!string.IsNullOrEmpty(source.SiteUrl))
-                            {
-                                finalUrl = Helper.Combine(source.Url, fromIndex.ToString());
-                            }
-                            else
-                            {
-                                finalUrl = Helper.CreateURL(source.AddSlash, source.Url, episodeNumber);
-                            }
+                            string finalUrl = GetFinalUrl(source, fromIndex);
 
                             client.DownloadFileCompleted += (s, e) =>
                             {
@@ -274,15 +256,14 @@ namespace Downloader
                                         }
                                         else
                                         {
-                                            var driver = new ChromeDriver();
-
-                                            driver.Navigate().GoToUrl(finalUrl);
-
-                                            var iframe = driver.FindElements(By.TagName("iframe")).FirstOrDefault(x => x.GetAttribute("src").Contains("cloud9"));
-
-                                            driver.SwitchTo().Frame(iframe);
-
-                                            var pageSource = driver.PageSource;
+                                            //ISSUE: Este fue un intento para descargar desde https://www3.jkanime.video/ pero allí los videos eran streameados en paquetes pequeños (.ts)
+                                            //       Estos pequeños paquetes luego eran unidos para formar el mp4, pero el video nunca es revelado en la pagina 
+                                            //       En otras palabras... es otro level de streming.
+                                            //var driver = new ChromeDriver();
+                                            //driver.Navigate().GoToUrl(finalUrl);
+                                            //var iframe = driver.FindElements(By.TagName("iframe")).FirstOrDefault(x => x.GetAttribute("src").Contains("cloud9"));
+                                            //driver.SwitchTo().Frame(iframe);
+                                            //var pageSource = driver.PageSource;
                                         }
                                     }
                                     catch (Exception ex)
@@ -312,6 +293,38 @@ namespace Downloader
             {
                 Append("-> FATAL: error no handleado en DownloadNext(source, int, int, int). Ver log.", ex);
             }
+        }
+
+        private static string GetFinalUrl(UrlSource source, int fromIndex)
+        {
+            var finalUrl = source.Url;
+
+            if (!string.IsNullOrEmpty(source.SiteUrl))
+            {
+                finalUrl = Helper.Combine(source.Url, fromIndex.ToString());
+            }
+            else
+            {
+                finalUrl = Helper.CreateURL(source.AddSlash, source.Url, fromIndex.ToString(source.Format));
+            }
+
+            return finalUrl;
+        }
+
+        private static string GetMediaName(UrlSource source, int fromIndex)
+        {
+            var season = string.Empty;
+
+            if (source.Season.HasValue)
+            {
+                season = $"S{source.Season.Value.ToString("00")}";
+            }
+
+            var episodeFormat = source.IsLongSeason ? "000" : source.Format;
+
+            var mediaName = $"{source.Name}_{season}E{fromIndex.ToString(episodeFormat)}.mp4";
+
+            return mediaName;
         }
 
         private string GetFinalDestination(Label updatingLabel, UrlSource source)
@@ -461,6 +474,11 @@ namespace Downloader
             {
                 Close();
             }
+        }
+
+        private void Copy_Click(object sender, EventArgs e)
+        {
+            new CopyForm(this, _configRepository, _log).Show();
         }
     }
 }
