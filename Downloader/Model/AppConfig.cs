@@ -10,5 +10,7 @@ namespace Downloader.Model
         public string DefaultFolder { get; set; }
 
         public string CopyDestination { get; set; }
+
+        public List<string> Favourites { get; set; }
     }
 }

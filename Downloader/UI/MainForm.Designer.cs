@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.Download = new System.Windows.Forms.Button();
-            this.URL = new System.Windows.Forms.TextBox();
+            this.FinalUrl = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.From = new System.Windows.Forms.TextBox();
@@ -66,13 +66,13 @@
             this.Download.UseVisualStyleBackColor = false;
             this.Download.Click += new System.EventHandler(this.ButtonDownload_Click);
             // 
-            // URL
+            // FinalUrl
             // 
-            this.URL.Enabled = false;
-            this.URL.Location = new System.Drawing.Point(12, 56);
-            this.URL.Name = "URL";
-            this.URL.Size = new System.Drawing.Size(485, 20);
-            this.URL.TabIndex = 2;
+            this.FinalUrl.Enabled = false;
+            this.FinalUrl.Location = new System.Drawing.Point(12, 56);
+            this.FinalUrl.Name = "FinalUrl";
+            this.FinalUrl.Size = new System.Drawing.Size(485, 20);
+            this.FinalUrl.TabIndex = 2;
             // 
             // label1
             // 
@@ -300,7 +300,7 @@
             this.Controls.Add(this.From);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.URL);
+            this.Controls.Add(this.FinalUrl);
             this.Controls.Add(this.Download);
             this.MaximizeBox = false;
             this.Name = "MainForm";
@@ -315,7 +315,7 @@
         #endregion
 
         private System.Windows.Forms.Button Download;
-        private System.Windows.Forms.TextBox URL;
+        private System.Windows.Forms.TextBox FinalUrl;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox From;

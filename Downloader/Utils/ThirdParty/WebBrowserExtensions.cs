@@ -15,11 +15,11 @@ namespace Downloader.Utils
 
             browser.DocumentCompleted += (s, e) => { manualEvent.Set(); };
 
-            return Task.Factory.StartNew((() =>
+            return Task.Factory.StartNew(() =>
             {
                 manualEvent.WaitOne();
                 manualEvent.Reset();
-            }));
+            }).ContinueWith(task => { Thread.Sleep(888); });
         }
     }
 }

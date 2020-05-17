@@ -68,11 +68,23 @@
     </Compile>
     <Compile Include="Extensions\TextBoxExtensions.cs" />
     <Compile Include="Model\AppConfig.cs" />
+    <Compile Include="UI\BaseForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\BaseProcessForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="UI\CopyForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UI\CopyForm.Designer.cs">
       <DependentUpon>CopyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UI\DownloadAllPreview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\DownloadAllPreview.Designer.cs">
+      <DependentUpon>DownloadAllPreview.cs</DependentUpon>
     </Compile>
     <Compile Include="UI\MainForm.cs">
       <SubType>Form</SubType>
@@ -86,6 +98,7 @@
     <Compile Include="Model\UrlSource.cs" />
     <Compile Include="Repository\LogRepository.cs" />
     <Compile Include="Repository\ConfigRepository.cs" />
+    <Compile Include="Model\PreviewGridItem.cs" />
     <Compile Include="UI\SelectedToCopyGridItem.cs" />
     <Compile Include="Utils\ThirdParty\WebBrowserExtensions.cs" />
     <Compile Include="Utils\Helper.cs" />
@@ -93,8 +106,17 @@
     <EmbeddedResource Include="UI\AddSourceForm.resx">
       <DependentUpon>AddSourceForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI\BaseForm.resx">
+      <DependentUpon>BaseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\BaseProcessForm.resx">
+      <DependentUpon>BaseProcessForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="UI\CopyForm.resx">
       <DependentUpon>CopyForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\DownloadAllPreview.resx">
+      <DependentUpon>DownloadAllPreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

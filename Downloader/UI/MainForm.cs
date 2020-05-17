@@ -7,8 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Downloader.Extensions;
-using Downloader.Logic;
-using Downloader.Repository;
 using Downloader.UI;
 using Downloader.Utils;
 using OpenQA.Selenium;
@@ -17,32 +15,28 @@ using TradeAutomation;
 
 namespace Downloader
 {
-    public partial class MainForm : Form
+    public partial class MainForm : BaseProcessForm
     {
         private string _selectedFolder;
         private UrlSource _currentSource;
         private WebClient _currentClient;
-        private ConfigRepository _configRepository;
-        private LogRepository _log;
-        private bool _bulkStarted;
+
+        protected override TextBox InternalLogStatus => Status;
 
         public MainForm()
         {
             InitializeComponent();
-
-            _configRepository = new ConfigRepository();
-            _log = new LogRepository();
         }
 
-        private void SaveDefaultFolder()
+        protected override void SaveDefaultFolder()
         {
             if (SetAsDefault.Checked)
             {
-                var config = _configRepository.ReadConfig();
+                var config = _repository.ReadConfig();
 
                 config.DefaultFolder = _selectedFolder;
 
-                _configRepository.WriteConfig(config);
+                _repository.WriteConfig(config);
             }
         }
 
@@ -50,7 +44,7 @@ namespace Downloader
         {
             if (_currentSource != null)
             {
-                await DownloadNext(_currentSource);
+                await Process(_currentSource);
             }
             else
             {
@@ -58,240 +52,203 @@ namespace Downloader
             }
         }
 
-        private async void DownloadAll_Click(object sender, EventArgs e)
+        private void DownloadAll_Click(object sender, EventArgs e)
         {
-            var config = _configRepository.ReadConfig();
-            var tasks = new ConcurrentBag<Task>();
+            var result = new DownloadAllPreview(this).ShowDialog();
+        }
 
-            _bulkStarted = true;
+        protected override void OnFinishProcessing()
+        {
+            EnableDisableForm(true);
+        }
 
-            foreach (var source in config.Sources.OrderBy(x => x.Name))
+        protected override void OnStartingProcessing()
+        {
+            EnableDisableForm(false);
+        }
+
+        private void EnableDisableForm(bool enabled)
+        {
+            Amount.Enabled = enabled;
+            DownloadAll.Enabled = enabled;
+            Download.Enabled = enabled;
+            From.Enabled = enabled;
+            To.Enabled = enabled;
+            Copy.Enabled = enabled;
+            SelectDestinButton.Enabled = enabled;
+            URLCombo.Enabled = enabled;
+            SetAsDefault.Enabled = enabled;
+        }
+
+        public override IndexParams GetIndexParams(UrlSource source)
+        {
+            var indexParams = new IndexParams();
+
+            indexParams.FromIndex = 1;
+            indexParams.ToIndex = int.MaxValue;
+            indexParams.Amount = int.MaxValue;
+
+            try
             {
-                if (_bulkStarted)
+                if (!string.IsNullOrEmpty(From.Text))
                 {
-                    UpdateUI(source);
+                    indexParams.FromIndex = Convert.ToInt32(From.Text);
+                }
+            }
+            catch
+            {
+            }
 
-                    Append($"-> Bulk Comenzado ({source.Text})");
-
-                    await DownloadNext(source);
-
-                    Append($"-> Bulk Finalizado ({source.Text})");
+            try
+            {
+                if (source.EpisodeAmount.HasValue)
+                {
+                    indexParams.ToIndex = source.EpisodeAmount.Value;
                 }
                 else
                 {
-                    Append($"-> Descarga Cancelada: {source.Url}");
-                }
-            }
-        }
-
-        private void Append(string log)
-        {
-            _log.Append(log);
-            Status.Append(log);
-        }
-
-        private void Append(string status, string log)
-        {
-            _log.Append(status);
-            _log.Append(log);
-            Status.Append(status);
-        }
-
-        private void Append(string log, Exception ex)
-        {
-            _log.Append(log);
-            _log.Append(ex);
-            Status.Append(log);
-        }
-
-        private async Task DownloadNext(UrlSource source)
-        {
-            try
-            {
-                int fromIndex = 1;
-                int toIndex = int.MaxValue;
-                int amount = int.MaxValue;
-
-                try
-                {
-                    if (!string.IsNullOrEmpty(From.Text))
+                    if (!string.IsNullOrEmpty(To.Text))
                     {
-                        fromIndex = Convert.ToInt32(From.Text);
-                    }
-                }
-                catch
-                {
-                }
+                        indexParams.ToIndex = Convert.ToInt32(To.Text);
 
-                try
-                {
-                    if (source.EpisodeAmount.HasValue)
-                    {
-                        toIndex = source.EpisodeAmount.Value;
-                    }
-                    else
-                    {
-                        if (!string.IsNullOrEmpty(To.Text))
+                        if (indexParams.ToIndex > 333)
                         {
-                            toIndex = Convert.ToInt32(To.Text);
+                            indexParams.ToIndex = 333;
                         }
                     }
-                }
-                catch
-                {
-                }
-
-                try
-                {
-                    if (!string.IsNullOrEmpty(Amount.Text))
-                    {
-                        amount = Convert.ToInt32(Amount.Text);
-                    }
-                }
-                catch
-                {
-                }
-
-                await DownloadNext(source, fromIndex, toIndex, amount);
-
-                SaveDefaultFolder();
-            }
-            catch (Exception ex)
-            {
-                Append("-> FATAL: error no handleado en DownloadNext(source). Ver log.", ex);
-            }
-        }
-
-        private async Task DownloadNext(UrlSource source, int fromIndex, int toIndex, int amount)
-        {
-            try
-            {
-                using (var client = new WebClient())
-                {
-                    if (fromIndex > toIndex || amount < 1)
-                    {
-                    }
                     else
                     {
-                        _currentClient = client;
+                        indexParams.ToIndex = 333;
+                    }
+                }
+            }
+            catch
+            {
+            }
 
-                        string mediaName = GetMediaName(source, fromIndex);
+            try
+            {
+                if (!string.IsNullOrEmpty(this.Amount.Text))
+                {
+                    indexParams.Amount = Convert.ToInt32(this.Amount.Text);
 
-                        string destination = GetFinalDestination(FinalDestination, source);
+                    if (indexParams.Amount > 333)
+                    {
+                        indexParams.Amount = 33;
+                    }
+                }
+            }
+            catch
+            {
+            }
 
-                        Directory.CreateDirectory(destination);
+            return indexParams;
+        }
 
-                        var fileDestination = Path.Combine(destination, mediaName);
+        protected override async Task ProcessFile(UrlSource source, int fromIndex, int toIndex, int amount, string mediaName, string fileDestination, string destination)
+        {
+            URLCombo.SelectedItem = URLCombo.Items.Cast<UrlSource>().FirstOrDefault(x => x.Url == source.Url);
+            UpdateUI(source);
+
+            using (var client = new WebClient())
+            {
+                Directory.CreateDirectory(destination);
+
+                _currentClient = client;
+
+                var tasks = new ConcurrentBag<Task>();
+
+                string finalUrl = GetFinalUrl(source, fromIndex);
+                FinalUrl.Text = finalUrl;
+
+                client.DownloadFileCompleted += (s, e) =>
+                {
+                    if (e.Cancelled)
+                    {
+                        Append($"-> Ultima descarga cancelada: {mediaName}");
 
                         if (File.Exists(fileDestination))
                         {
-                            _log.Append($"-> Ya Existe {mediaName}");
-
-                            await DownloadNext(source, fromIndex + 1, toIndex, amount);
-                        }
-                        else
-                        {
-                            var tasks = new ConcurrentBag<Task>();
-
-                            string finalUrl = GetFinalUrl(source, fromIndex);
-
-                            client.DownloadFileCompleted += (s, e) =>
-                            {
-                                if (e.Cancelled)
-                                {
-                                    Append($"-> Ultima descarga cancelada: {mediaName}");
-
-                                    if (File.Exists(fileDestination))
-                                    {
-                                        File.Delete(fileDestination);
-                                    }
-                                }
-                                else if (e.Error != null)
-                                {
-                                    Append($"-> Error al descargar {mediaName}", $"Error: {e.Error.Message}{Environment.NewLine}URLError: {finalUrl}");
-
-                                    if (File.Exists(fileDestination))
-                                    {
-                                        File.Delete(fileDestination);
-                                    }
-                                }
-                                else
-                                {
-                                    Append($"-> Finalizado {mediaName}");
-
-                                    tasks.Add(DownloadNext(source, fromIndex + 1, toIndex, amount - 1));
-                                }
-                            };
-
-                            if (!string.IsNullOrEmpty(source.SiteUrl))
-                            {
-                                var browser = new WebBrowser();
-
-                                browser.ScriptErrorsSuppressed = true;
-
-                                tasks.Add(browser.NavigateAsync(finalUrl));
-
-                                browser.DocumentCompleted += (s, e) =>
-                                {
-                                    try
-                                    {
-                                        var htmlDocument = browser.Document.Window.Frames
-                                        .Cast<HtmlWindow>()
-                                        .Select(x => x.GetDocument())
-                                        .FirstOrDefault(x => x.Url.ToString().Contains("jkanime"));
-
-                                        if (htmlDocument != null)
-                                        {
-                                            browser.Dispose();
-
-                                            var driver = new ChromeDriver();
-
-                                            driver.Navigate().GoToUrl(htmlDocument.Url.ToString());
-
-                                            var tag = driver.FindElementByTagName("source").GetAttribute("src");
-
-                                            finalUrl = driver.FindElementByTagName("video").FindElement(By.TagName("source")).GetAttribute("src");
-
-                                            driver.Quit();
-                                        }
-                                        else
-                                        {
-                                            //ISSUE: Este fue un intento para descargar desde https://www3.jkanime.video/ pero allí los videos eran streameados en paquetes pequeños (.ts)
-                                            //       Estos pequeños paquetes luego eran unidos para formar el mp4, pero el video nunca es revelado en la pagina 
-                                            //       En otras palabras... es otro level de streming.
-                                            //var driver = new ChromeDriver();
-                                            //driver.Navigate().GoToUrl(finalUrl);
-                                            //var iframe = driver.FindElements(By.TagName("iframe")).FirstOrDefault(x => x.GetAttribute("src").Contains("cloud9"));
-                                            //driver.SwitchTo().Frame(iframe);
-                                            //var pageSource = driver.PageSource;
-                                        }
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        Append("-> FATAL: error al intentar obtener video URL. Ver log.", ex);
-                                    }
-                                };
-
-                                await Task.WhenAll(tasks.ToArray());
-                            }
-
-                            URL.Text = finalUrl;
-
-                            Append($"<- Descargando {mediaName}");
-
-                            await client.DownloadFileTaskAsync(finalUrl, fileDestination).ContinueWith(task =>
-                            {
-                                Thread.Sleep(500);
-
-                                Task.WaitAll(tasks.ToArray());
-                            });
+                            File.Delete(fileDestination);
                         }
                     }
+                    else if (e.Error != null)
+                    {
+                        Append($"-> Error al descargar {mediaName}", $"Error: {e.Error.Message}{Environment.NewLine}URLError: {finalUrl}");
+
+                        if (File.Exists(fileDestination))
+                        {
+                            File.Delete(fileDestination);
+                        }
+                    }
+                    else
+                    {
+                        Append($"-> Finalizado {mediaName}");
+
+                        tasks.Add(ProcessNext(source, fromIndex + 1, toIndex, amount - 1));
+                    }
+                };
+
+                if (!string.IsNullOrEmpty(source.SiteUrl))
+                {
+                    var browser = new WebBrowser();
+
+                    browser.ScriptErrorsSuppressed = true;
+
+                    tasks.Add(browser.NavigateAsync(finalUrl));
+
+                    browser.DocumentCompleted += (s, e) =>
+                    {
+                        try
+                        {
+                            var htmlDocument = browser.Document.Window.Frames
+                            .Cast<HtmlWindow>()
+                            .Select(x => x.GetDocument())
+                            .FirstOrDefault(x => x.Url.ToString().Contains("jkanime"));
+
+                            if (htmlDocument != null)
+                            {
+                                browser.Dispose();
+
+                                var driver = new ChromeDriver();
+
+                                driver.Navigate().GoToUrl(htmlDocument.Url.ToString());
+
+                                var tag = driver.FindElementByTagName("source").GetAttribute("src");
+
+                                finalUrl = driver.FindElementByTagName("video").FindElement(By.TagName("source")).GetAttribute("src");
+
+                                driver.Quit();
+                            }
+                            else
+                            {
+                                //ISSUE: Este fue un intento para descargar desde https://www3.jkanime.video/ pero allí los videos eran streameados en paquetes pequeños (.ts)
+                                //       Estos pequeños paquetes luego eran unidos para formar el mp4, pero el video nunca es revelado en la pagina
+                                //       En otras palabras... es otro level de streming.
+                                //var driver = new ChromeDriver();
+                                //driver.Navigate().GoToUrl(finalUrl);
+                                //var iframe = driver.FindElements(By.TagName("iframe")).FirstOrDefault(x => x.GetAttribute("src").Contains("cloud9"));
+                                //driver.SwitchTo().Frame(iframe);
+                                //var pageSource = driver.PageSource;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Append("-> FATAL: error al intentar obtener video URL. Ver log.", ex);
+                        }
+                    };
+
+                    await Task.WhenAll(tasks.ToArray());
                 }
-            }
-            catch (Exception ex)
-            {
-                Append("-> FATAL: error no handleado en DownloadNext(source, int, int, int). Ver log.", ex);
+
+                Append($"<- Descargando {mediaName}");
+
+                await client.DownloadFileTaskAsync(finalUrl, fileDestination).ContinueWith(task =>
+                {
+                    Thread.Sleep(500);
+
+                    Task.WaitAll(tasks.ToArray());
+                });
             }
         }
 
@@ -311,23 +268,7 @@ namespace Downloader
             return finalUrl;
         }
 
-        private static string GetMediaName(UrlSource source, int fromIndex)
-        {
-            var season = string.Empty;
-
-            if (source.Season.HasValue)
-            {
-                season = $"S{source.Season.Value.ToString("00")}";
-            }
-
-            var episodeFormat = source.IsLongSeason ? "000" : source.Format;
-
-            var mediaName = $"{source.Name}_{season}E{fromIndex.ToString(episodeFormat)}.mp4";
-
-            return mediaName;
-        }
-
-        private string GetFinalDestination(Label updatingLabel, UrlSource source)
+        public override string GetFinalDestination(UrlSource source)
         {
             var destination = _selectedFolder;
 
@@ -341,9 +282,12 @@ namespace Downloader
                 }
             }
 
-            updatingLabel.Text = destination;
-
             return destination;
+        }
+
+        private void UpdateFinalDestination(UrlSource source)
+        {
+            FinalDestination.Text = GetFinalDestination(source);
         }
 
         private void SelectDestinButton_Click(object sender, EventArgs e)
@@ -356,7 +300,7 @@ namespace Downloader
                 {
                     _selectedFolder = fbd.SelectedPath;
                     SelectedFolder.Text = _selectedFolder;
-                    GetFinalDestination(FinalDestination, _currentSource);
+                    UpdateFinalDestination(_currentSource);
                     SetAsDefault.Checked = false;
                 }
             }
@@ -368,38 +312,46 @@ namespace Downloader
 
         private void FolderNameTextBox_TextChanged(object sender, EventArgs e)
         {
-            GetFinalDestination(FinalDestination, _currentSource);
+            UpdateFinalDestination(_currentSource);
         }
 
         private void URLSelectionComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             _currentSource = URLCombo.SelectedItem as UrlSource;
 
-            UpdateUI(_currentSource);
+            UpdateUIFull(_currentSource);
         }
 
-        private void UpdateUI(UrlSource source)
+        protected void UpdateUI(UrlSource source)
         {
-            URL.Text = source.Url;
+            FinalUrl.Text = source.Url;
             FolderName.Text = source.Folder;
+            UpdateFinalDestination(source);
+        }
 
-            if (source.EpisodeAmount.HasValue)
-            {
-                To.Text = source.EpisodeAmount.ToString();
-            }
-            else
-            {
-                To.Text = string.Empty;
-            }
+        protected void UpdateUIFull(UrlSource source)
+        {
+            UpdateUI(source);
 
-            From.Text = "1";
+            if (!_bulkStarted && !_processStarted)
+            {
+                if (source.EpisodeAmount.HasValue)
+                {
+                    To.Text = source.EpisodeAmount.ToString();
+                    From.Text = "1";
+                }
+                else
+                {
+                    To.Text = string.Empty;
+                }
+            }
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             LoadCombos();
 
-            var config = _configRepository.ReadConfig();
+            var config = _repository.ReadConfig();
 
             if (!string.IsNullOrWhiteSpace(config.DefaultFolder))
             {
@@ -416,7 +368,7 @@ namespace Downloader
 
             var index = 1;
 
-            var config = _configRepository.ReadConfig();
+            var config = _repository.ReadConfig();
 
             var items = config.Sources.OrderBy(x => x.Name).ToList();
 
@@ -478,7 +430,18 @@ namespace Downloader
 
         private void Copy_Click(object sender, EventArgs e)
         {
-            new CopyForm(this, _configRepository, _log).Show();
+            new CopyForm().Show();
         }
+    }
+
+    public class IndexParams
+    {
+        public IndexParams()
+        {
+        }
+
+        public int FromIndex { get; internal set; }
+        public int ToIndex { get; internal set; }
+        public int Amount { get; internal set; }
     }
 }

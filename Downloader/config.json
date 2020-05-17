@@ -16,15 +16,15 @@
     {
       "AddSlash": true,
       "IsLongSeason": false,
-      "SiteUrl": null,
-      "Mp4Url": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia-2nd-season",
+      "SiteUrl": "https://jkanime.net/boku-no-hero-academia-2nd-season/",
+      "Mp4Url": null,
       "Format": "00",
       "Name": "boku-no-hero",
       "Season": 2,
       "EpisodeAmount": 25,
       "Folder": "boku-no-hero",
       "Text": "boku-no-hero   |    temporada-2",
-      "Url": "https://storage.googleapis.com/marosita.appspot.com/boku-no-hero-academia-2nd-season"
+      "Url": "https://jkanime.net/boku-no-hero-academia-2nd-season/"
     },
     {
       "AddSlash": true,
@@ -162,13 +162,14 @@
       "SiteUrl": "https://www3.jkanime.video/dragon-ball-super-latino",
       "Mp4Url": null,
       "Format": "00",
-      "Name": "dragon-ball-super",
+      "Name": "dragon-ball-super-latino",
       "Season": null,
       "EpisodeAmount": 131,
-      "Folder": "dragon-ball-super",
-      "Text": "dragon-ball-super",
+      "Folder": "dragon-ball-super-latino",
+      "Text": "dragon-ball-super-latino",
       "Url": "https://www3.jkanime.video/dragon-ball-super-latino"
     }
   ],
-  "DefaultFolder": "E:\\anime"
+  "DefaultFolder": "E:\\anime",
+  "CopyDestination": "G:\\anime"
 }

@@ -5,24 +5,17 @@ using System.Linq;
 using System.Windows.Forms;
 using Downloader.Extensions;
 using Downloader.Model;
-using Downloader.Repository;
 
 namespace Downloader.UI
 {
-    public partial class CopyForm : Form
+    public partial class CopyForm : BaseProcessForm
     {
-        private MainForm _mainForm;
-        private ConfigRepository _repository;
-        private LogRepository _log;
-
-        public CopyForm(MainForm mainForm, ConfigRepository repository, LogRepository log)
+        public CopyForm()
         {
-            _mainForm = mainForm;
-            _repository = repository;
-            _log = log;
-
             InitializeComponent();
         }
+
+        protected override TextBox InternalLogStatus => Status;
 
         private void Copy_Click(object sender, EventArgs e)
         {
@@ -189,26 +182,6 @@ namespace Downloader.UI
         private void SelectDestination_Click(object sender, EventArgs e)
         {
             SelectFolder(_repository.ReadConfig());
-        }
-
-        private void Append(string log)
-        {
-            _log.Append(log);
-            Status.Append(log);
-        }
-
-        private void Append(string status, string log)
-        {
-            _log.Append(status);
-            _log.Append(log);
-            Status.Append(status);
-        }
-
-        private void Append(string log, Exception ex)
-        {
-            _log.Append(log);
-            _log.Append(ex);
-            Status.Append(log);
         }
     }
 }
