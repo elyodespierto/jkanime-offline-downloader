@@ -30,6 +30,8 @@ namespace Downloader.UI
                     var inner = item.GetInnerItem();
                     var forzadoText = string.Empty;
 
+                    Directory.CreateDirectory(inner.DestinFilePath);
+
                     File.Copy(inner.Origin(), inner.Destin(), inner.ForceCopy);
 
                     if (inner.ForceCopy)
