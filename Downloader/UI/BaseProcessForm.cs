@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Downloader.Extensions;
 using Downloader.Model;
 
 namespace Downloader
@@ -84,7 +85,12 @@ namespace Downloader
 
                     if (File.Exists(fileDestination))
                     {
-                        AppendInLog($"-> Ya Existe {mediaName}");
+                        Append($"-> Ya Existe {mediaName}");
+
+                        if (source.OneOnly)
+                        {
+                            amount--;
+                        }
 
                         await ProcessNext(source, fromIndex + 1, toIndex, amount);
                     }
@@ -109,18 +115,7 @@ namespace Downloader
 
         protected string GetMediaName(UrlSource source, int fromIndex)
         {
-            var season = string.Empty;
-
-            if (source.Season.HasValue)
-            {
-                season = $"S{source.Season.Value.ToString("00")}";
-            }
-
-            var episodeFormat = source.IsLongSeason ? "000" : source.Format;
-
-            var mediaName = $"{source.Name}_{season}E{fromIndex.ToString(episodeFormat)}.mp4";
-
-            return mediaName;
+            return source.GetMediaName(fromIndex);
         }
 
         public virtual string GetFinalDestination(UrlSource source)
@@ -141,13 +136,12 @@ namespace Downloader
         private void InitializeComponent()
         {
             this.SuspendLayout();
-            // 
+            //
             // BaseProcessForm
-            // 
+            //
             this.ClientSize = new System.Drawing.Size(284, 261);
             this.Name = "BaseProcessForm";
             this.ResumeLayout(false);
-
         }
     }
 }

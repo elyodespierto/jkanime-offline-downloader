@@ -142,6 +142,11 @@ namespace Downloader
             {
             }
 
+            if (source.OneOnly)
+            {
+                indexParams.Amount = 1;
+            }
+
             return indexParams;
         }
 
@@ -158,7 +163,7 @@ namespace Downloader
 
                 var tasks = new ConcurrentBag<Task>();
 
-                string finalUrl = GetFinalUrl(source, fromIndex);
+                string finalUrl = source.GetFinalUrl(fromIndex);
                 FinalUrl.Text = finalUrl;
 
                 client.DownloadFileCompleted += (s, e) =>
@@ -189,7 +194,7 @@ namespace Downloader
                     }
                 };
 
-                if (!string.IsNullOrEmpty(source.SiteUrl))
+                if (!source.IsFile)
                 {
                     var browser = new WebBrowser();
 
@@ -201,10 +206,10 @@ namespace Downloader
                     {
                         try
                         {
-                            var htmlDocument = browser.Document.Window.Frames
-                            .Cast<HtmlWindow>()
-                            .Select(x => x.GetDocument())
-                            .FirstOrDefault(x => x.Url.ToString().Contains("jkanime"));
+                            var frames = browser.Document.Window.Frames.Cast<HtmlWindow>().ToList();
+
+                            var documents = frames.Select(x => x.GetDocument()).ToList();
+                            var htmlDocument = documents.FirstOrDefault(x => x.Url.ToString().Contains("jkanime"));
 
                             if (htmlDocument != null)
                             {
@@ -250,22 +255,6 @@ namespace Downloader
                     Task.WaitAll(tasks.ToArray());
                 });
             }
-        }
-
-        private static string GetFinalUrl(UrlSource source, int fromIndex)
-        {
-            var finalUrl = source.Url;
-
-            if (!string.IsNullOrEmpty(source.SiteUrl))
-            {
-                finalUrl = Helper.Combine(source.Url, fromIndex.ToString());
-            }
-            else
-            {
-                finalUrl = Helper.CreateURL(source.AddSlash, source.Url, fromIndex.ToString(source.Format));
-            }
-
-            return finalUrl;
         }
 
         public override string GetFinalDestination(UrlSource source)

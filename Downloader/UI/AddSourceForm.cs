@@ -28,19 +28,25 @@ namespace Downloader
             {
                 AddSlash.Checked = _currentObject.AddSlash;
                 EpisodeFormat.Text = _currentObject.Format;
-                Mp4Url.Text = _currentObject.Mp4Url;
-                SeasonTextBox.Text = (_currentObject.Season).ToString();
-                NameTextBox.Text = _currentObject.Name;
+                Link.Text = _currentObject.Url;
+                SeasonTextBox.Text = _currentObject.Season.ToString();
+                AnimeName.Text = _currentObject.Name;
+                EpisodeName.Text = _currentObject.ExtraName;
                 IsLongSeason.Checked = _currentObject.IsLongSeason;
-                IncludeSiteUrl.Checked = !string.IsNullOrEmpty(_currentObject.SiteUrl);
+                EsArchivo.Checked = _currentObject.IsFile;
                 EpisodeAmount.Text = _currentObject.EpisodeAmount?.ToString();
+                EsPelicula.Checked = _currentObject.IsMovie;
+                EsOva.Checked = _currentObject.IsOva;
+                EsCapitulo.Checked = _currentObject.IsEpisode;
+                EsTemporada.Checked = _currentObject.IsSeason;
+                Solo.Checked = _currentObject.OneOnly;
 
-                if (IncludeSiteUrl.Checked)
+                if (!EsPelicula.Checked && !EsOva.Checked && !EsCapitulo.Checked && !EsTemporada.Checked)
                 {
-                    SiteUrl.Text = _currentObject.SiteUrl;
+                    EsTemporada.Checked = true;
                 }
 
-                _oldURL = _currentObject.Url;
+                _oldURL = Link.Text;
             }
 
             _configRepo = new ConfigRepository();
@@ -92,10 +98,17 @@ namespace Downloader
         private void FillSource(UrlSource source)
         {
             source.Format = EpisodeFormat.Text;
-            source.Mp4Url = Mp4Url.Text;
-            source.Name = NameTextBox.Text;
-            source.IsLongSeason = IsLongSeason.Checked;
+            source.Name = AnimeName.Text;
+            source.ExtraName = EpisodeName.Text;
+            source.Link = Link.Text;
             source.AddSlash = AddSlash.Checked;
+            source.OneOnly = Solo.Checked;
+            source.IsMovie = EsPelicula.Checked;
+            source.IsOva = EsOva.Checked;
+            source.IsSeason = EsTemporada.Checked;
+            source.IsLongSeason = IsLongSeason.Checked;
+            source.IsEpisode = EsCapitulo.Checked;
+            source.IsFile = EsArchivo.Checked;
 
             try
             {
@@ -111,17 +124,6 @@ namespace Downloader
             }
             catch (Exception)
             {
-            }
-
-            if (IncludeSiteUrl.Checked)
-            {
-                source.SiteUrl = SiteUrl.Text;
-                source.Mp4Url = null;
-            }
-            else
-            {
-                source.Mp4Url = Mp4Url.Text;
-                source.SiteUrl = null;
             }
         }
 
@@ -152,45 +154,57 @@ namespace Downloader
             Close();
         }
 
-        private void URL_TextChanged(object sender, EventArgs e)
-        {
-            FinalURL.Text = Helper.CreateURL(AddSlash.Checked, Mp4Url.Text, EpisodeFormat.Text);
-        }
-
         private void EpisodeFormat_TextChanged(object sender, EventArgs e)
         {
-            FinalURL.Text = Helper.CreateURL(AddSlash.Checked, Mp4Url.Text, EpisodeFormat.Text);
+            UpdateNames();
         }
 
-        private void AddSlash_CheckedChanged(object sender, EventArgs e)
+        private void IsLongSeason_CheckedChanged(object sender, EventArgs e)
         {
-            FinalURL.Text = Helper.CreateURL(AddSlash.Checked, Mp4Url.Text, EpisodeFormat.Text);
-        }
-
-        private void IncludeSiteUrl_CheckedChanged(object sender, EventArgs e)
-        {
-            SiteUrl.Enabled = IncludeSiteUrl.Checked;
-            Mp4Url.Visible = !SiteUrl.Enabled;
-            Shadow.Visible = SiteUrl.Enabled;
-            AddSlash.Enabled = !SiteUrl.Enabled;
-
-            if (SiteUrl.Enabled)
+            if (IsLongSeason.Checked)
             {
-                FinalURL.Text = Helper.Combine(SiteUrl.Text, EpisodeFormat.Text);
+                EpisodeFormat.Enabled = false;
+                EpisodeFormat.Text = "000";
             }
             else
             {
-                FinalURL.Text = Helper.CreateURL(AddSlash.Checked, Mp4Url.Text, EpisodeFormat.Text);
+                EpisodeFormat.Enabled = true;
+                EpisodeFormat.Text = "00";
             }
         }
 
-        private void Shadow_TextChanged(object sender, EventArgs e)
+        private void EsTemporada_CheckedChanged(object sender, EventArgs e)
         {
+            if (EsTemporada.Checked)
+            {
+                IsLongSeason.Enabled = true;
+            }
+            else
+            {
+                IsLongSeason.Enabled = false;
+            }
         }
 
-        private void SiteUrl_TextChanged(object sender, EventArgs e)
+        private void Update_Click(object sender, EventArgs e)
         {
-            FinalURL.Text = Helper.Combine(SiteUrl.Text, EpisodeFormat.Text);
+            UpdateNames();
+        }
+
+        private void UpdateNames()
+        {
+            var source = new UrlSource();
+
+            FillSource(source);
+
+            FileNamePreview.Text = source.GetMediaName(0);
+            if (EsArchivo.Checked)
+            {
+                UrlPreview.Text = Link.Text;
+            }
+            else
+            {
+                UrlPreview.Text = source.GetFinalUrl(0);
+            }
         }
     }
 }
